@@ -45,6 +45,10 @@ const submitStyle = {
     display: 'block'
 };
 
+const overlayStyle = {
+    overflow: 'visible'
+};
+
 const Field = React.forwardRef(({label, type,inputPlace}, ref) => {
     return (
         <div>
@@ -157,23 +161,10 @@ class App extends React.Component {
                     alert(JSON.stringify(payload));
                 }}
             />
-            <Overlay anchor={[50.879, 4.6997]} offset={[120, 79]}>
-                <img
-                    src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pg0KPHN2ZyB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGc+DQo8cGF0aCBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+DQo8cGF0aCAgZmlsbD0ibm9uZSIgZD0iTTMgMTloMTh2Mkgzdi0yek0xMyA1LjgyOFYxN2gtMlY1LjgyOEw0LjkyOSAxMS45bC0xLjQxNC0xLjQxNEwxMiAybDguNDg1IDguNDg1LTEuNDE0IDEuNDE0TDEzIDUuODN6Ii8+DQo8L2c+PC9zdmc+"
-                    width={100}
-                    height={100}
-                    alt=""
-                    color="rgba(0,0,0,0)"
-                />
-                <svg height="210" width="500">
-                    <line
-                        x1="0"
-                        y1="0"
-                        x2="200"
-                        y2="200"
-                        stroke="rgb(255,0,0)"
-                        stroke-width="10"
-                    />
+            <Overlay
+                anchor={[50.879, 4.6997]} offset={[0, 0]}>
+                <svg height="20" width="20" style={overlayStyle}>
+                    <circle cx="0" cy="0" r="10" fill="red" />
                 </svg>
             </Overlay>
         </Map>

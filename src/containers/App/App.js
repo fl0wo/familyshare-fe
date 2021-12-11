@@ -1,6 +1,6 @@
-import {register, login, getMyKids} from '../api'
+import {getMyKids, login, register} from '../api'
 import React, {Fragment, useEffect, useState} from "react";
-import {Map, Marker, Overlay, OverlayProps} from "pigeon-maps";
+import {Map} from "pigeon-maps";
 import {stamenToner} from 'pigeon-maps/providers'
 
 const appStyle = {
@@ -123,51 +123,54 @@ function toArray(pos) {
     ];
 }
 
-const Line = ({
+const PathDrawer = ({
                   mapState: {width, height},
                   latLngToPixel,
-                  coordsArray,
+                  kidsPaths,
                   style = {strokeWidth: 5}
               }) => {
-    if (coordsArray.length < 2) {
-        return null;
-    }
 
-    let lines = []
-    let pixel = latLngToPixel(toArray(coordsArray[0]))
+    function getPath(path) {
+        if (path.length < 2) {
+            return null;
+        }
 
-    lines.push(<circle cx={pixel[0]} cy={pixel[1]}
-                       r={style.strokeWidth}
-                       fill={coordsArray[0].color}/>)
+        let lines = []
+        let pixel = latLngToPixel(toArray(path[0]))
 
-    for (let i=1;i<coordsArray.length;i++) {
-        let pixel2 = latLngToPixel(toArray(coordsArray[i]))
-        lines.push(<line
-            key={i}
-            x1={pixel[0]}
-            y1={pixel[1]}
-            x2={pixel2[0]}
-            y2={pixel2[1]}
-            style={
-                {
-                    stroke:coordsArray[i].color,
-                    strokeWidth:5
-                }
-            }
-        />)
-        lines.push(<circle cx={pixel2[0]} cy={pixel2[1]}
+        lines.push(<circle cx={pixel[0]} cy={pixel[1]}
                            r={style.strokeWidth}
-                           fill={coordsArray[i].color}/>)
-        pixel = pixel2
+                           fill={path[0].color}/>)
+
+        for (let i = 1; i < path.length; i++) {
+            let pixel2 = latLngToPixel(toArray(path[i]))
+            lines.push(<line
+                key={i}
+                x1={pixel[0]}
+                y1={pixel[1]}
+                x2={pixel2[0]}
+                y2={pixel2[1]}
+                style={
+                    {
+                        stroke: path[i].color,
+                        strokeWidth: 5
+                    }
+                }
+            />)
+            lines.push(<circle cx={pixel2[0]} cy={pixel2[1]}
+                               r={style.strokeWidth}
+                               fill={path[i].color}/>)
+            pixel = pixel2
+        }
+        return lines
     }
 
     return (
         <svg width={width} height={height}
              style={{top: 0, left: 0}}
         >
-            {lines}
+            {kidsPaths.map(kidPath=>getPath(kidPath))}
         </svg>
-
     )
 }
 
@@ -251,22 +254,14 @@ class App extends React.Component {
 
     getMapByMarkers(markers_array) {
 
-        let markers = markers_array[0];
-
-        console.log(JSON.stringify(markers_array))
-
         return <Map
             provider={stamenToner}
-            defaultCenter={toArray(markers[0])}
+            defaultCenter={toArray(markers_array[0][0])}
             defaultZoom={18}
             width={1000}
             height={1000}
         >
-            {
-                markers_array.map(markers =>
-                    <Line coordsArray={markers}/>
-                )
-            }
+            <PathDrawer kidsPaths={markers_array}/>
         </Map>;
     }
 

@@ -203,6 +203,7 @@ class App extends React.Component {
         const interval = setInterval(() => {
             this.addNewPosToCurrentMarkers()
                 .then(kids_locations=>{
+                    if(kids_locations.length<=0)return;
                     this.setState({
                         jwt: this.state.jwt,
                         map: this.getMapByMarkers(kids_locations)
@@ -213,6 +214,7 @@ class App extends React.Component {
 
     addNewPosToCurrentMarkers() {
         return getMyKids().then(kids => {
+            if (kids.data.length<=0) return kids.data;
             const primoFIglio = 0;
             return kids.data[primoFIglio]
                 .positions.map(pos => [pos.coords.lat, pos.coords.long])

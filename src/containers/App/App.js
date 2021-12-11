@@ -1,4 +1,4 @@
-import {register, login } from '../api'
+import {register, login ,getMyKids} from '../api'
 import React, { Fragment } from "react";
 import { Map, Marker, Overlay, OverlayProps } from "pigeon-maps";
 import { stamenToner } from 'pigeon-maps/providers'
@@ -177,21 +177,24 @@ class App extends React.Component {
         this.setState({jwt : jwt})
     }
 
-    simulateMove(){
-        let newMarkers = this.addNewPosToCurrentMarkers();
-
-        let jwt = this.state.jwt;
-        this.setState({
-            jwt : jwt,
-            markers : newMarkers,
-            map : this.getMapByMarkers(newMarkers)
-        })
+    async simulateMove() {
+        this.addNewPosToCurrentMarkers()
+            .then(kids_locations=>{
+                this.state.markers = kids_locations;
+                let jwt = this.state.jwt;
+                this.setState({
+                    jwt: jwt,
+                    markers: this.state.markers,
+                    map: this.getMapByMarkers(this.state.markers)
+                })
+            })
     }
 
-    addNewPosToCurrentMarkers(){
-        let newMarkers = this.state.markers;
-        newMarkers.push([45.500217, 12.260105]);
-        return newMarkers;
+    addNewPosToCurrentMarkers() {
+        return getMyKids().then(kids => {
+                let xx = kids.data[0].positions.map(pos => [pos.coords.lat, pos.coords.long])
+                return xx;
+            });
     }
 
     getMapByMarkers(markers) {

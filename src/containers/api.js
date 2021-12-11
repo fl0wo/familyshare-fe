@@ -39,4 +39,19 @@ const register = async (name, email, pwd) => {
         });
 }
 
-export {register,login, jwt}
+const getMyKids = async () => {
+
+    if (jwt==null) return null;
+
+    return axios.get(BASEURL + "/positions/",{
+            headers: {Authorization: 'Bearer ' + jwt}})
+        .then((res)=>{
+            return res;
+        })
+        .catch(err=>{
+            alert(JSON.stringify(err));
+            return null;
+        });
+}
+
+export {register,login, jwt, getMyKids}

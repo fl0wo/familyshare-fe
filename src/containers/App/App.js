@@ -163,7 +163,6 @@ class App extends React.Component {
 
     state = {
         jwt : null,
-        markers : [[45.500557, 12.260485],[45.500517, 12.260115]],
         map : null
     }
 
@@ -171,30 +170,30 @@ class App extends React.Component {
         super(props)
         this.updateState = this.updateState.bind(this)
         this.simulateMove = this.simulateMove.bind(this)
-        this.state.map = this.getMapByMarkers(this.state.markers);
     }
+
     updateState(jwt){
-        this.setState({jwt : jwt})
+        this.setState({
+            jwt: jwt,
+            map: this.getMapByMarkers([[45.500557, 12.260485],[45.500517, 12.260115]])
+        })
     }
 
     async simulateMove() {
         this.addNewPosToCurrentMarkers()
             .then(kids_locations=>{
-                this.state.markers = kids_locations;
-                let jwt = this.state.jwt;
+                kids_locations.push([Math.random()*45,Math.random()*12])
                 this.setState({
-                    jwt: jwt,
-                    markers: this.state.markers,
-                    map: this.getMapByMarkers(this.state.markers)
+                    jwt: this.state.jwt,
+                    map: this.getMapByMarkers(kids_locations)
                 })
             })
     }
 
     addNewPosToCurrentMarkers() {
         return getMyKids().then(kids => {
-                let xx = kids.data[0].positions.map(pos => [pos.coords.lat, pos.coords.long])
-                return xx;
-            });
+            return kids.data[0].positions.map(pos => [pos.coords.lat, pos.coords.long])
+        });
     }
 
     getMapByMarkers(markers) {

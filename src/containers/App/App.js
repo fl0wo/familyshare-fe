@@ -105,8 +105,8 @@ const RegisterForm = ({onSubmit}) => {
     );
 };
 
-const HasJwt = (user) => {
-    user = user?.user?.data;
+const HasJwt = ({user,onKidSelect}) => {
+    user = user?.data;
     return (
         <div>
             <h1>Welcome {user.role} {user.name}!</h1>
@@ -115,9 +115,11 @@ const HasJwt = (user) => {
             </h3>
             <ul>
             {
-                user.childrens.map(kid=> (
+                user.childrens.map((kid,i)=> (
                     <li>
-                        <div style={{
+                        <div
+                            onClick={()=>onKidSelect(i)}
+                            style={{
                             borderRadius:"50%",
                             backgroundColor:kid.color,
                             height: "25px",
@@ -131,7 +133,6 @@ const HasJwt = (user) => {
             <h2>{new Date().getTime()}</h2>
         </div>
     );
-    //{jwt && <div> Ha jwt </div>}
 }
 
 function toArray(pos) {
@@ -224,6 +225,7 @@ class App extends React.Component {
         super(props)
         this.updateState = this.updateState.bind(this)
         this.listenToMovements = this.listenToMovements.bind(this)
+        this.onKidSelect = this.onKidSelect.bind(this);
     }
 
     updateState(user, jwt) {
@@ -250,7 +252,8 @@ class App extends React.Component {
                         jwt: this.state.jwt,
                         map: this.getMapByMarkers(
                             kids_locations
-                        )
+                        ),
+                        user : this.state.user
                     })
                 })
         }, 1000);
@@ -306,11 +309,11 @@ class App extends React.Component {
         });
     };
 
-    render() {
-        async function getMe() {
-            return await me().then(u => u);
-        }
+    onKidSelect(i){
 
+    }
+
+    render() {
         return (
             <div style={appStyle}>
                 {
@@ -323,7 +326,10 @@ class App extends React.Component {
                 {
                     this.state.jwt &&
                     <div>
-                        <HasJwt user={this.state.user}/>
+                        <HasJwt
+                            user={this.state.user}
+                            onKidSelect={this.onKidSelect}
+                        />
                         <Fragment>{this.state.map}</Fragment>
                         <div>
                             <IntervalExample></IntervalExample>

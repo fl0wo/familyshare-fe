@@ -1,5 +1,5 @@
 import {register, login ,getMyKids} from '../api'
-import React, { Fragment } from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import { Map, Marker, Overlay, OverlayProps } from "pigeon-maps";
 import { stamenToner } from 'pigeon-maps/providers'
 
@@ -158,6 +158,25 @@ const Line = ({ mapState: { width, height },
     )
 }
 
+const IntervalExample = () => {
+    const [seconds, setSeconds] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setSeconds(seconds => seconds + 1);
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <div className="App">
+            <header className="App-header">
+                {seconds} seconds have elapsed since mounting.
+            </header>
+        </div>
+    );
+};
+
 
 class App extends React.Component {
 
@@ -169,7 +188,7 @@ class App extends React.Component {
     constructor(props){
         super(props)
         this.updateState = this.updateState.bind(this)
-        this.simulateMove = this.simulateMove.bind(this)
+        this.listenToMovements = this.listenToMovements.bind(this)
     }
 
     updateState(jwt){
@@ -177,22 +196,26 @@ class App extends React.Component {
             jwt: jwt,
             map: this.getMapByMarkers([[45.500557, 12.260485],[45.500517, 12.260115]])
         })
+        this.listenToMovements();
     }
 
-    async simulateMove() {
-        this.addNewPosToCurrentMarkers()
-            .then(kids_locations=>{
-                kids_locations.push([Math.random()*45,Math.random()*12])
-                this.setState({
-                    jwt: this.state.jwt,
-                    map: this.getMapByMarkers(kids_locations)
+    listenToMovements() {
+        const interval = setInterval(() => {
+            this.addNewPosToCurrentMarkers()
+                .then(kids_locations=>{
+                    this.setState({
+                        jwt: this.state.jwt,
+                        map: this.getMapByMarkers(kids_locations)
+                    })
                 })
-            })
+        }, 1000);
     }
 
     addNewPosToCurrentMarkers() {
         return getMyKids().then(kids => {
-            return kids.data[0].positions.map(pos => [pos.coords.lat, pos.coords.long])
+            const primoFIglio = 0;
+            return kids.data[primoFIglio]
+                .positions.map(pos => [pos.coords.lat, pos.coords.long])
         });
     }
 
@@ -241,17 +264,16 @@ class App extends React.Component {
                         <HasJwt/>
                         <Fragment>{this.state.map}</Fragment>
                         <div>
-                            <button onClick={this.simulateMove}>
+                            <IntervalExample></IntervalExample>
+                 {/*           <button onClick={this.simulateMove}>
                                 Start Listening
-                            </button>
+                            </button>*/}
                         </div>
                     </div>
                 }
             </div>
         );
     }
-
-
 
 }
 

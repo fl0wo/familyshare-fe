@@ -178,14 +178,20 @@ class App extends React.Component {
     }
 
     simulateMove(){
-        let newMarkers = this.state.markers;
-        newMarkers.push([45.500217, 12.260105]);
+        let newMarkers = this.addNewPosToCurrentMarkers();
+
         let jwt = this.state.jwt;
         this.setState({
             jwt : jwt,
             markers : newMarkers,
             map : this.getMapByMarkers(newMarkers)
         })
+    }
+
+    addNewPosToCurrentMarkers(){
+        let newMarkers = this.state.markers;
+        newMarkers.push([45.500217, 12.260105]);
+        return newMarkers;
     }
 
     getMapByMarkers(markers) {
@@ -234,7 +240,7 @@ class App extends React.Component {
                         <Fragment>{this.state.map}</Fragment>
                         <div>
                             <button onClick={this.simulateMove}>
-                                Click
+                                Start Listening
                             </button>
                         </div>
                     </div>

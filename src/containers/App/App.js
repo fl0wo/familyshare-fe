@@ -192,9 +192,12 @@ class App extends React.Component {
     }
 
     updateState(jwt){
+        const INITIAL_POSITION = [[45.500557, 12.260485],[45.500517, 12.260115]];
         this.setState({
             jwt: jwt,
-            map: this.getMapByMarkers([[45.500557, 12.260485],[45.500517, 12.260115]])
+            map: this.getMapByMarkers(
+                [INITIAL_POSITION]
+            )
         })
         this.listenToMovements();
     }
@@ -206,7 +209,9 @@ class App extends React.Component {
                     if(kids_locations.length<=0)return;
                     this.setState({
                         jwt: this.state.jwt,
-                        map: this.getMapByMarkers(kids_locations)
+                        map: this.getMapByMarkers(
+                            kids_locations
+                        )
                     })
                 })
         }, 1000);
@@ -215,13 +220,16 @@ class App extends React.Component {
     addNewPosToCurrentMarkers() {
         return getMyKids().then(kids => {
             if (kids.data.length<=0) return kids.data;
-            const primoFIglio = 0;
-            return kids.data[primoFIglio]
-                .positions.map(pos => [pos.coords.lat, pos.coords.long])
+            return kids.data.map(kid=>
+                kid.positions.map(pos => [pos.coords.lat, pos.coords.long])
+            );
         });
     }
 
-    getMapByMarkers(markers) {
+    getMapByMarkers(markers_array) {
+
+        let markers = markers_array[0];
+
         return <Map
             provider={stamenToner}
             defaultCenter={markers[0]}

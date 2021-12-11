@@ -1,4 +1,4 @@
-import {getMyKids, login, register} from '../api'
+import {getMyKids, login, register, me} from '../api'
 import React, {Fragment, useEffect, useState} from "react";
 import {Map} from "pigeon-maps";
 import {stamenToner} from 'pigeon-maps/providers'
@@ -105,11 +105,29 @@ const RegisterForm = ({onSubmit}) => {
     );
 };
 
-const HasJwt = () => {
-
+const HasJwt = (user) => {
+    user = user?.user?.data;
     return (
         <div>
-            <h1>Welcome to {"c"} !</h1>
+            <h1>Welcome {user.role} {user.name}!</h1>
+            <h3>
+                {user.email}[{user.verified ? 'ok' : 'nok'}]
+            </h3>
+            <ul>
+            {
+                user.childrens.map(kid=> (
+                    <li>
+                        <div style={{
+                            borderRadius:"50%",
+                            backgroundColor:kid.color,
+                            height: "25px",
+                            width: "25px"
+                        }}/>
+                        <span>{kid.name}</span>
+                    </li>
+                ))
+            }
+            </ul>
             <h2>{new Date().getTime()}</h2>
         </div>
     );
@@ -198,7 +216,8 @@ class App extends React.Component {
 
     state = {
         jwt: null,
-        map: null
+        map: null,
+        user:null
     }
 
     constructor(props) {
@@ -207,7 +226,7 @@ class App extends React.Component {
         this.listenToMovements = this.listenToMovements.bind(this)
     }
 
-    updateState(jwt) {
+    updateState(user, jwt) {
         const INITIAL_POSITION = [
             {lat : 45.500557,long:12.260485,color:"#000"},
             {lat : 45.500517,long:12.260115,color:"#000"}
@@ -216,7 +235,8 @@ class App extends React.Component {
             jwt: jwt,
             map: this.getMapByMarkers(
                 [INITIAL_POSITION]
-            )
+            ),
+            user : user
         })
         this.listenToMovements();
     }
@@ -266,10 +286,12 @@ class App extends React.Component {
     }
 
     handleLogin = data => {
-        login(data.email, data.password).then(jwt => {
+        login(data.email, data.password)
+            .then(jwt => {
             if (jwt) {
-                //alert(JSON.stringify(jwt));
-                this.updateState(jwt);
+                me().then(user=>{
+                    this.updateState(user,jwt);
+                })
             }
         });
     };
@@ -277,12 +299,18 @@ class App extends React.Component {
     handleRegister = data => {
         register(data.name, data.email, data.password).then(jwt => {
             if (jwt) {
-                this.updateState(jwt);
+                me().then(user=>{
+                    this.updateState(user,jwt);
+                })
             }
         });
     };
 
     render() {
+        async function getMe() {
+            return await me().then(u => u);
+        }
+
         return (
             <div style={appStyle}>
                 {
@@ -295,7 +323,7 @@ class App extends React.Component {
                 {
                     this.state.jwt &&
                     <div>
-                        <HasJwt/>
+                        <HasJwt user={this.state.user}/>
                         <Fragment>{this.state.map}</Fragment>
                         <div>
                             <IntervalExample></IntervalExample>

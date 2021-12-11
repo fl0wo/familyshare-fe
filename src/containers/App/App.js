@@ -160,13 +160,44 @@ const Line = ({ mapState: { width, height },
 
 
 class App extends React.Component {
+
+    state = {
+        jwt : null,
+        markers : [[45.500557, 12.260485],[45.500517, 12.260115]],
+        map : null
+    }
+
     constructor(props){
         super(props)
-        this.state = {jwt : null}
         this.updateState = this.updateState.bind(this)
+        this.simulateMove = this.simulateMove.bind(this)
+        this.state.map = this.getMapByMarkers(this.state.markers);
     }
     updateState(jwt){
         this.setState({jwt : jwt})
+    }
+
+    simulateMove(){
+        let newMarkers = this.state.markers;
+        newMarkers.push([45.500217, 12.260105]);
+        let jwt = this.state.jwt;
+        this.setState({
+            jwt : jwt,
+            markers : newMarkers,
+            map : this.getMapByMarkers(newMarkers)
+        })
+    }
+
+    getMapByMarkers(markers) {
+        return <Map
+            provider={stamenToner}
+            defaultCenter={markers[0]}
+            defaultZoom={18}
+            width={1000}
+            height={1000}
+        >
+            <Line coordsArray={markers}/>
+        </Map>;
     }
 
     handleLogin = data => {
@@ -186,20 +217,6 @@ class App extends React.Component {
         });
     };
 
-    markers = [[50.879, 4.6997],[50.8794, 4.6994]]
-
-    map = (
-        <Map
-            provider={stamenToner}
-            defaultCenter={this.markers[0]}
-            defaultZoom={18}
-            width={1000}
-            height={1000}
-        >
-            <Line coordsArray={this.markers} />
-        </Map>
-    );
-
     render(){
         return (
             <div style={appStyle}>
@@ -214,7 +231,12 @@ class App extends React.Component {
                     this.state.jwt &&
                     <div>
                         <HasJwt/>
-                        <Fragment>{this.map}</Fragment>
+                        <Fragment>{this.state.map}</Fragment>
+                        <div>
+                            <button onClick={this.simulateMove}>
+                                Click
+                            </button>
+                        </div>
                     </div>
                 }
             </div>

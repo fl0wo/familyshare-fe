@@ -1,7 +1,9 @@
-import {getMyKids, login, register, me} from '../api'
-import React, {Fragment, useEffect, useState} from "react";
+import {getMyKids, login, me, register} from '../api'
+import React, {Fragment} from "react";
 import {Map} from "pigeon-maps";
 import {stamenToner} from 'pigeon-maps/providers'
+import Popup from 'react-popup';
+import {IntervalExample} from "../components/interval";
 
 const appStyle = {
     height: '250px',
@@ -193,25 +195,6 @@ const PathDrawer = ({
     )
 }
 
-const IntervalExample = () => {
-    const [seconds, setSeconds] = useState(0);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setSeconds(seconds => seconds + 1);
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
-
-    return (
-        <div className="App">
-            <header className="App-header">
-                {seconds} seconds have elapsed since mounting.
-            </header>
-        </div>
-    );
-};
-
 
 class App extends React.Component {
 
@@ -310,12 +293,13 @@ class App extends React.Component {
     };
 
     onKidSelect(i){
-
+        Popup.alert('alert'+i);
     }
 
     render() {
         return (
             <div style={appStyle}>
+                <Popup />
                 {
                     this.state.jwt == null &&
                     <div>

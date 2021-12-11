@@ -1,7 +1,7 @@
-import {register, login ,getMyKids} from '../api'
+import {register, login, getMyKids} from '../api'
 import React, {Fragment, useEffect, useState} from "react";
-import { Map, Marker, Overlay, OverlayProps } from "pigeon-maps";
-import { stamenToner } from 'pigeon-maps/providers'
+import {Map, Marker, Overlay, OverlayProps} from "pigeon-maps";
+import {stamenToner} from 'pigeon-maps/providers'
 
 const appStyle = {
     height: '250px',
@@ -49,7 +49,7 @@ const overlayStyle = {
     overflow: 'visible'
 };
 
-const Field = React.forwardRef(({label, type,inputPlace}, ref) => {
+const Field = React.forwardRef(({label, type, inputPlace}, ref) => {
     return (
         <div>
             <label style={labelStyle}>{label}</label>
@@ -109,48 +109,61 @@ const HasJwt = () => {
 
     return (
         <div>
-            <h1>Welcome to { "c" } !</h1>
+            <h1>Welcome to {"c"} !</h1>
             <h2>{new Date().getTime()}</h2>
         </div>
     );
     //{jwt && <div> Ha jwt </div>}
 }
 
-const Line = ({ mapState: { width, height },
+function toArray(pos) {
+    return [
+        Number.parseFloat(pos.lat),
+        Number.parseFloat(pos.long)
+    ];
+}
+
+const Line = ({
+                  mapState: {width, height},
                   latLngToPixel,
                   coordsArray,
-                  style = { stroke: 'rgb(255,0,0)', strokeWidth: 5 } }) => {
+                  style = {strokeWidth: 5}
+              }) => {
     if (coordsArray.length < 2) {
         return null;
     }
 
     let lines = []
-    let pixel = latLngToPixel(coordsArray[0])
+    let pixel = latLngToPixel(toArray(coordsArray[0]))
 
     lines.push(<circle cx={pixel[0]} cy={pixel[1]}
                        r={style.strokeWidth}
-                       fill={style.stroke} />)
+                       fill={coordsArray[0].color}/>)
 
-    for (let i = 1; i < coordsArray.length; i++) {
-        let pixel2 = latLngToPixel(coordsArray[i])
+    for (let i=1;i<coordsArray.length;i++) {
+        let pixel2 = latLngToPixel(toArray(coordsArray[i]))
         lines.push(<line
             key={i}
             x1={pixel[0]}
             y1={pixel[1]}
             x2={pixel2[0]}
             y2={pixel2[1]}
-            style={style}
-
+            style={
+                {
+                    stroke:coordsArray[i].color,
+                    strokeWidth:5
+                }
+            }
         />)
         lines.push(<circle cx={pixel2[0]} cy={pixel2[1]}
                            r={style.strokeWidth}
-                           fill={style.stroke} />)
+                           fill={coordsArray[i].color}/>)
         pixel = pixel2
     }
 
     return (
         <svg width={width} height={height}
-             style={{ top: 0, left: 0}}
+             style={{top: 0, left: 0}}
         >
             {lines}
         </svg>
@@ -181,18 +194,21 @@ const IntervalExample = () => {
 class App extends React.Component {
 
     state = {
-        jwt : null,
-        map : null
+        jwt: null,
+        map: null
     }
 
-    constructor(props){
+    constructor(props) {
         super(props)
         this.updateState = this.updateState.bind(this)
         this.listenToMovements = this.listenToMovements.bind(this)
     }
 
-    updateState(jwt){
-        const INITIAL_POSITION = [[45.500557, 12.260485],[45.500517, 12.260115]];
+    updateState(jwt) {
+        const INITIAL_POSITION = [
+            {lat : 45.500557,long:12.260485,color:"#000"},
+            {lat : 45.500517,long:12.260115,color:"#000"}
+        ];
         this.setState({
             jwt: jwt,
             map: this.getMapByMarkers(
@@ -205,8 +221,8 @@ class App extends React.Component {
     listenToMovements() {
         const interval = setInterval(() => {
             this.addNewPosToCurrentMarkers()
-                .then(kids_locations=>{
-                    if(kids_locations.length<=0)return;
+                .then(kids_locations => {
+                    if (kids_locations.length <= 0) return;
                     this.setState({
                         jwt: this.state.jwt,
                         map: this.getMapByMarkers(
@@ -219,10 +235,17 @@ class App extends React.Component {
 
     addNewPosToCurrentMarkers() {
         return getMyKids().then(kids => {
-            if (kids.data.length<=0) return kids.data;
-            return kids.data.map(kid=>
-                kid.positions.map(pos => [pos.coords.lat, pos.coords.long])
-            );
+            if (kids.data.length <= 0) return kids.data;
+            return kids.data.map(kid =>
+                kid.positions.map(pos => {
+                        return {
+                            lat : pos.coords.lat,
+                            long: pos.coords.long,
+                            color: kid.color
+                        }
+                    }
+                )
+            )
         });
     }
 
@@ -230,20 +253,26 @@ class App extends React.Component {
 
         let markers = markers_array[0];
 
+        console.log(JSON.stringify(markers_array))
+
         return <Map
             provider={stamenToner}
-            defaultCenter={markers[0]}
+            defaultCenter={toArray(markers[0])}
             defaultZoom={18}
             width={1000}
             height={1000}
         >
-            <Line coordsArray={markers}/>
+            {
+                markers_array.map(markers =>
+                    <Line coordsArray={markers}/>
+                )
+            }
         </Map>;
     }
 
     handleLogin = data => {
-        login(data.email, data.password).then(jwt =>{
-            if(jwt){
+        login(data.email, data.password).then(jwt => {
+            if (jwt) {
                 //alert(JSON.stringify(jwt));
                 this.updateState(jwt);
             }
@@ -251,22 +280,22 @@ class App extends React.Component {
     };
 
     handleRegister = data => {
-        register(data.name, data.email, data.password).then(jwt =>{
-            if(jwt){
+        register(data.name, data.email, data.password).then(jwt => {
+            if (jwt) {
                 this.updateState(jwt);
             }
         });
     };
 
-    render(){
+    render() {
         return (
             <div style={appStyle}>
                 {
-                    this.state.jwt==null &&
-                        <div>
-                            <RegisterForm onSubmit={this.handleRegister}/>
-                            <LoginForm onSubmit={this.handleLogin}/>
-                        </div>
+                    this.state.jwt == null &&
+                    <div>
+                        <RegisterForm onSubmit={this.handleRegister}/>
+                        <LoginForm onSubmit={this.handleLogin}/>
+                    </div>
                 }
                 {
                     this.state.jwt &&
@@ -275,7 +304,7 @@ class App extends React.Component {
                         <Fragment>{this.state.map}</Fragment>
                         <div>
                             <IntervalExample></IntervalExample>
-                 {/*           <button onClick={this.simulateMove}>
+                            {/*           <button onClick={this.simulateMove}>
                                 Start Listening
                             </button>*/}
                         </div>

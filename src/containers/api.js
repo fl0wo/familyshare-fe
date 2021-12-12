@@ -51,6 +51,18 @@ const me = async () => {
         .catch(handleError);
 }
 
+const myEvent = async (eventId) => {
+    if (jwt==null) return null;
+
+    return http.post(BASEURL + "/profile/event/show",
+        {
+            id : eventId
+        },
+        header(jwt))
+        .then(identity)
+        .catch(handleError);
+}
+
 function handleError(err) {
     alert(JSON.stringify(err));
     return null;
@@ -64,4 +76,4 @@ function header(jwt) {
 
 let identity=res=>res;
 
-export {register,login, jwt, getMyKids, me}
+export {register,login, jwt, getMyKids, me, myEvent}

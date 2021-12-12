@@ -1,4 +1,4 @@
-import {getMyKids, login, me, register} from '../api'
+import {getMyKids, login, me, register, myEvent} from '../api'
 import React, {Fragment} from "react";
 import {Map} from "pigeon-maps";
 import {stamenToner} from 'pigeon-maps/providers'
@@ -14,12 +14,18 @@ const appStyle = {
 };
 
 class App extends React.Component {
+    INITIAL_POSITION = [
+        {lat : 45.500557,long:12.260485,color:"#000"},
+        {lat : 45.500517,long:12.260115,color:"#000"}
+    ];
 
     state = {
         jwt: null,
         map: null,
         user:null,
-        events:null
+        events:null,
+        isLive:true,
+        selectedPaths:this.INITIAL_POSITION
     }
 
     constructor(props) {
@@ -27,35 +33,22 @@ class App extends React.Component {
         this.updateState = this.updateState.bind(this)
         this.listenToMovements = this.listenToMovements.bind(this)
         this.onKidSelect = this.onKidSelect.bind(this);
+        this.onEventSelect = this.onEventSelect.bind(this);
     }
 
     updateState() {
-        const INITIAL_POSITION = [
-            {lat : 45.500557,long:12.260485,color:"#000"},
-            {lat : 45.500517,long:12.260115,color:"#000"}
-        ];
-        this.setState({
-            jwt: this.state.jwt,
-            map: this.getMapByMarkers(
-                [INITIAL_POSITION]
-            ),
-            user : this.state.user
-        })
-        this.listenToMovements();
+        this.setState(this.state)
     }
 
     listenToMovements() {
         const interval = setInterval(() => {
             this.addNewPosToCurrentMarkers()
                 .then(kids_locations => {
-                    if (kids_locations.length <= 0) return;
-                    this.setState({
-                        jwt: this.state.jwt,
-                        map: this.getMapByMarkers(
-                            kids_locations
-                        ),
-                        user : this.state.user
-                    })
+                    if (kids_locations.length > 0 &&
+                    this.state.isLive) {
+                        this.state.map = this.getMapByMarkers(kids_locations);
+                        this.updateState()
+                    }
                 })
         }, 1000);
     }
@@ -78,9 +71,13 @@ class App extends React.Component {
 
     getMapByMarkers(markers_array) {
 
+        let center = markers_array.length>0?
+            toArray(markers_array[0][0]) :
+            null
+
         return <Map
             provider={stamenToner}
-            defaultCenter={toArray(markers_array[0][0])}
+            defaultCenter={center}
             defaultZoom={18}
             width={1000}
             height={1000}
@@ -97,13 +94,12 @@ class App extends React.Component {
 
                 me().then(user=>{
                     this.state.user=user;
+                    this.state.map = this.getMapByMarkers(
+                        [this.INITIAL_POSITION]
+                    )
                     this.updateState();
+                    this.listenToMovements();
                 })
-                /*
-                myEvents().then(events=>{
-                    this.updateState(user,events,jwt);
-                })
-                */
             }
         });
     };
@@ -126,6 +122,35 @@ class App extends React.Component {
         Popup.alert('alert'+i);
     }
 
+    onEventSelect(eventId){
+        function pathToMap(event) {
+            return event.data.paths
+                .filter(pa=>pa.positions.length>0)
+                .map((pa,ip)=>{
+
+                return pa.positions
+                    .map((po)=>({
+                    lat: po.coords.lat,
+                    long: po.coords.long,
+                    color : '#000'//pa[ip].color
+                }))
+
+            });
+        }
+
+        myEvent(eventId).then(event=>{
+            if(event==null)return;
+            this.state.isLive = false;
+            this.state.selectedPaths= pathToMap(event);
+
+            alert(JSON.stringify(this.state.selectedPaths))
+            this.state.map = this.getMapByMarkers(
+                this.state.selectedPaths
+            );
+            this.updateState();
+        })
+    }
+
     render() {
         return (
             <div style={appStyle}>
@@ -143,7 +168,7 @@ class App extends React.Component {
                         <HasJwt
                             user={this.state.user}
                             onKidSelect={this.onKidSelect}
-                            events={[]}
+                            onEventSelect={this.onEventSelect}
                         />
                         <Fragment>{this.state.map}</Fragment>
                         <div>

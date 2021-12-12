@@ -1,10 +1,10 @@
-import {getMyKids, login, me, register, myEvent} from '../api'
+import {getMyKids, login, me, myEvent, register} from '../api'
 import React, {Fragment} from "react";
 import {Map} from "pigeon-maps";
 import {stamenToner} from 'pigeon-maps/providers'
 import Popup from 'react-popup';
 import {IntervalExample} from "../components/interval";
-import {PathDrawer, toArray } from "../components/pathdrawer";
+import {PathDrawer, toArray} from "../components/pathdrawer";
 import {HasJwt} from "../components/profile";
 import {LoginForm, RegisterForm} from "../components/auth";
 
@@ -126,15 +126,12 @@ class App extends React.Component {
         function pathToMap(event) {
             return event.data.paths
                 .filter(pa=>pa.positions.length>0)
-                .map((pa,ip)=>{
+                .map((pa)=>{
 
-                return pa.positions
-                    .map((po)=>({
-                    lat: po.coords.lat,
-                    long: po.coords.long,
-                    color : '#000'//pa[ip].color
+                return pa.positions.map((po) => ({
+                    ...po.coords,
+                    color:pa.color
                 }))
-
             });
         }
 
@@ -143,7 +140,6 @@ class App extends React.Component {
             this.state.isLive = false;
             this.state.selectedPaths= pathToMap(event);
 
-            alert(JSON.stringify(this.state.selectedPaths))
             this.state.map = this.getMapByMarkers(
                 this.state.selectedPaths
             );

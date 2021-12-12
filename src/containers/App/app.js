@@ -83,35 +83,28 @@ class App extends React.Component {
         </Map>;
     }
 
+    init(jwt) {
+        if (jwt) {
+            this.state.jwt = jwt;
+
+            me().then(user => {
+                this.state.user = user;
+                this.state.map = null
+                this.checkUpdates();
+                const interval =
+                    setInterval(this.checkUpdates, 1000);
+            })
+        }
+    }
+
     handleLogin = data => {
         login(data.email, data.password)
-            .then(jwt => {
-            if (jwt) {
-                this.state.jwt=jwt;
-
-                me().then(user=>{
-                    this.state.user=user;
-                    this.state.map = null
-                    this.checkUpdates();
-                    const interval =
-                        setInterval(this.checkUpdates, 1000);
-                })
-            }
-        });
+            .then((jwt)=>this.init(jwt));
     };
 
     handleRegister = data => {
-        register(data.name, data.email, data.password).then(jwt => {
-            if (jwt) {
-                this.state.jwt=jwt;
-
-                me().then(user=>{
-                    this.state.user=user;
-
-                    this.updateState();
-                })
-            }
-        });
+        register(data.name, data.email, data.password)
+            .then((jwt)=>this.init(jwt));
     };
 
     onKidSelect(i){

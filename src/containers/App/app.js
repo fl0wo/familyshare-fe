@@ -14,10 +14,6 @@ const appStyle = {
 };
 
 class App extends React.Component {
-    INITIAL_POSITION = [
-        {lat : 45.500557,long:12.260485,color:"#000"},
-        {lat : 45.500517,long:12.260115,color:"#000"}
-    ];
 
     state = {
         jwt: null,
@@ -25,14 +21,14 @@ class App extends React.Component {
         user:null,
         events:null,
         isLive:true,
-        selectedPaths:this.INITIAL_POSITION,
-        livePaths:this.INITIAL_POSITION
+        selectedPaths:[],
+        livePaths:[]
     }
 
     constructor(props) {
         super(props)
         this.updateState = this.updateState.bind(this)
-        this.listenToMovements = this.listenToMovements.bind(this)
+        this.checkUpdates = this.checkUpdates.bind(this)
         this.onKidSelect = this.onKidSelect.bind(this);
         this.onEventSelect = this.onEventSelect.bind(this);
     }
@@ -41,19 +37,17 @@ class App extends React.Component {
         this.setState(this.state)
     }
 
-    listenToMovements() {
-        const interval = setInterval(() => {
-            this.addNewPosToCurrentMarkers()
-                .then(kids_locations => {
-                    if (kids_locations.length > 0){
-                        this.state.livePaths = kids_locations;
-                        if (this.state.isLive) {
-                            this.state.map = this.getMapByMarkers(this.state.livePaths);
-                            this.updateState()
-                        }
+    checkUpdates() {
+        this.addNewPosToCurrentMarkers()
+            .then(kids_locations => {
+                if (kids_locations.length > 0){
+                    this.state.livePaths = kids_locations;
+                    if (this.state.isLive) {
+                        this.state.map = this.getMapByMarkers(this.state.livePaths);
+                        this.updateState()
                     }
-                })
-        }, 1000);
+                }
+            })
     }
 
     addNewPosToCurrentMarkers() {
@@ -97,11 +91,10 @@ class App extends React.Component {
 
                 me().then(user=>{
                     this.state.user=user;
-                    this.state.map = this.getMapByMarkers(
-                        [this.INITIAL_POSITION]
-                    )
-                    this.updateState();
-                    this.listenToMovements();
+                    this.state.map = null
+                    this.checkUpdates();
+                    const interval =
+                        setInterval(this.checkUpdates, 1000);
                 })
             }
         });

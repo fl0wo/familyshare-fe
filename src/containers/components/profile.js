@@ -28,6 +28,11 @@ export const HasJwt = ({user, onKidSelect, onEventSelect}) => {
             <h2>{new Date().getTime()}</h2>
             <div>
                 {
+                    <p onClick={()=>onEventSelect('-1')}>
+                        Live following
+                    </p>
+                }
+                {
                     user.events.map(e=>(
                         <p onClick={()=>onEventSelect(e._id)}>
                             {e.title}

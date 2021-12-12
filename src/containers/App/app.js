@@ -25,7 +25,8 @@ class App extends React.Component {
         user:null,
         events:null,
         isLive:true,
-        selectedPaths:this.INITIAL_POSITION
+        selectedPaths:this.INITIAL_POSITION,
+        livePaths:this.INITIAL_POSITION
     }
 
     constructor(props) {
@@ -44,10 +45,12 @@ class App extends React.Component {
         const interval = setInterval(() => {
             this.addNewPosToCurrentMarkers()
                 .then(kids_locations => {
-                    if (kids_locations.length > 0 &&
-                    this.state.isLive) {
-                        this.state.map = this.getMapByMarkers(kids_locations);
-                        this.updateState()
+                    if (kids_locations.length > 0){
+                        this.state.livePaths = kids_locations;
+                        if (this.state.isLive) {
+                            this.state.map = this.getMapByMarkers(this.state.livePaths);
+                            this.updateState()
+                        }
                     }
                 })
         }, 1000);
@@ -123,6 +126,14 @@ class App extends React.Component {
     }
 
     onEventSelect(eventId){
+
+        if (eventId==='-1'){
+            this.state.isLive=true;
+            this.state.map = this.getMapByMarkers(this.state.livePaths);
+            this.updateState();
+            return;
+        }
+
         function pathToMap(event) {
             return event.data.paths
                 .filter(pa=>pa.positions.length>0)
@@ -169,9 +180,6 @@ class App extends React.Component {
                         <Fragment>{this.state.map}</Fragment>
                         <div>
                             <IntervalExample></IntervalExample>
-                            {/*           <button onClick={this.simulateMove}>
-                                Start Listening
-                            </button>*/}
                         </div>
                     </div>
                 }

@@ -125,6 +125,10 @@ class App extends React.Component {
         Popup.alert('alert'+i);
     }
 
+    onKidAdd(){
+        Popup.alert('add kiddo');
+    }
+
     onEventSelect(eventId){
 
         if (eventId==='-1'){
@@ -176,6 +180,7 @@ class App extends React.Component {
                             user={this.state.user}
                             onKidSelect={this.onKidSelect}
                             onEventSelect={this.onEventSelect}
+                            onKidAdd={this.onKidAdd}
                         />
                         <Fragment>{this.state.map}</Fragment>
                         <div>

@@ -1,6 +1,10 @@
 import React from "react";
 
-export const HasJwt = ({user, onKidSelect, onEventSelect}) => {
+export const HasJwt = ({
+                           user,
+                           onKidSelect,
+                           onKidAdd,
+                           onEventSelect}) => {
     user = user?.data;
     return (
         <div>
@@ -14,16 +18,21 @@ export const HasJwt = ({user, onKidSelect, onEventSelect}) => {
                         <li>
                             <div
                                 onClick={() => onKidSelect(i)}
-                                style={{
-                                    borderRadius: "50%",
-                                    backgroundColor: kid.color,
-                                    height: "25px",
-                                    width: "25px"
-                                }}/>
-                            <span>{kid.name}</span>
+                            >
+                                <span
+                                    style={{
+                                        borderRadius: "50%",
+                                        backgroundColor: kid.color,
+                                        height: "25px",
+                                        width: "25px"
+                                    }}
+                                >----</span>
+                                <span>{kid.name}</span>
+                            </div>
                         </li>
                     ))
                 }
+                <button onClick={onKidAdd}>+</button>
             </ul>
             <h2>{new Date().getTime()}</h2>
             <div>

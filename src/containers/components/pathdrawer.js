@@ -1,5 +1,12 @@
 import React from "react";
 
+export function toArray(pos) {
+    return [
+        Number.parseFloat(pos.lat),
+        Number.parseFloat(pos.long)
+    ];
+}
+
 export const PathDrawer = ({
                                mapState: {width, height},
                                latLngToPixel,
@@ -7,12 +14,6 @@ export const PathDrawer = ({
                                style = {strokeWidth: 5}
                            }) => {
 
-    function toArray(pos) {
-        return [
-            Number.parseFloat(pos.lat),
-            Number.parseFloat(pos.long)
-        ];
-    }
 
     function getPath(path) {
         if (path.length < 2) {

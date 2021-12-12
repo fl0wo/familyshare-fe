@@ -4,7 +4,7 @@ import {Map} from "pigeon-maps";
 import {stamenToner} from 'pigeon-maps/providers'
 import Popup from 'react-popup';
 import {IntervalExample} from "../components/interval";
-import {PathDrawer} from "../components/pathdrawer";
+import {PathDrawer, toArray } from "../components/pathdrawer";
 import {HasJwt} from "../components/profile";
 import {LoginForm, RegisterForm} from "../components/auth";
 
@@ -13,20 +13,13 @@ const appStyle = {
     display: 'flex'
 };
 
-function toArray(pos) {
-    return [
-        Number.parseFloat(pos.lat),
-        Number.parseFloat(pos.long)
-    ];
-}
-
-
 class App extends React.Component {
 
     state = {
         jwt: null,
         map: null,
-        user:null
+        user:null,
+        events:null
     }
 
     constructor(props) {
@@ -36,17 +29,17 @@ class App extends React.Component {
         this.onKidSelect = this.onKidSelect.bind(this);
     }
 
-    updateState(user, jwt) {
+    updateState() {
         const INITIAL_POSITION = [
             {lat : 45.500557,long:12.260485,color:"#000"},
             {lat : 45.500517,long:12.260115,color:"#000"}
         ];
         this.setState({
-            jwt: jwt,
+            jwt: this.state.jwt,
             map: this.getMapByMarkers(
                 [INITIAL_POSITION]
             ),
-            user : user
+            user : this.state.user
         })
         this.listenToMovements();
     }
@@ -100,9 +93,17 @@ class App extends React.Component {
         login(data.email, data.password)
             .then(jwt => {
             if (jwt) {
+                this.state.jwt=jwt;
+
                 me().then(user=>{
-                    this.updateState(user,jwt);
+                    this.state.user=user;
+                    this.updateState();
                 })
+                /*
+                myEvents().then(events=>{
+                    this.updateState(user,events,jwt);
+                })
+                */
             }
         });
     };
@@ -110,8 +111,12 @@ class App extends React.Component {
     handleRegister = data => {
         register(data.name, data.email, data.password).then(jwt => {
             if (jwt) {
+                this.state.jwt=jwt;
+
                 me().then(user=>{
-                    this.updateState(user,jwt);
+                    this.state.user=user;
+
+                    this.updateState();
                 })
             }
         });
@@ -138,6 +143,7 @@ class App extends React.Component {
                         <HasJwt
                             user={this.state.user}
                             onKidSelect={this.onKidSelect}
+                            events={[]}
                         />
                         <Fragment>{this.state.map}</Fragment>
                         <div>

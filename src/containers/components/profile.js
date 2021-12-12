@@ -1,6 +1,6 @@
 import React from "react";
 
-export const HasJwt = ({user, onKidSelect}) => {
+export const HasJwt = ({user, onKidSelect, events}) => {
     user = user?.data;
     return (
         <div>
@@ -26,6 +26,13 @@ export const HasJwt = ({user, onKidSelect}) => {
                 }
             </ul>
             <h2>{new Date().getTime()}</h2>
+            <div>
+                {
+                    events.map(e=>(
+                        <p>{e.title}</p>
+                    ))
+                }
+            </div>
         </div>
     );
 }

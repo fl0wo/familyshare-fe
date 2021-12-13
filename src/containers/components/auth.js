@@ -41,7 +41,7 @@ const Field = React.forwardRef(({label, type, inputPlace}, ref) => {
         </div>
     );
 });
-export const LoginForm = ({onSubmit}) => {
+function LoginForm({onSubmit}){
     const emailRef = React.useRef();
     const passwordRef = React.useRef();
     const handleSubmit = e => {
@@ -62,7 +62,7 @@ export const LoginForm = ({onSubmit}) => {
         </form>
     );
 };
-export const RegisterForm = ({onSubmit}) => {
+function RegisterForm({onSubmit}){
     const nameRef = React.useRef();
     const emailRef = React.useRef();
     const passwordRef = React.useRef();
@@ -86,3 +86,9 @@ export const RegisterForm = ({onSubmit}) => {
         </form>
     );
 };
+
+LoginForm.displayName='Login'
+RegisterForm.displayName='Register'
+Field.displayName = 'Fiffo'
+
+export {LoginForm,RegisterForm};

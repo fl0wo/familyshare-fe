@@ -1,13 +1,13 @@
 import { styled, Typography } from '@mui/material';
 import { useContext } from 'react';
 import { Helmet } from 'react-helmet';
-// @ts-ignore
-import App from "./containers/App/app";
 
 import logo from '../logo.svg';
 
 import { AppContext } from '../contexts';
 import { APP_TITLE, PAGE_TITLE_HOME } from '../utils/constants';
+// @ts-ignore
+import App from '../containers/App/app.js'
 
 export const Home = () => {
   const context = useContext(AppContext);
@@ -19,10 +19,8 @@ export const Home = () => {
           {PAGE_TITLE_HOME} | {APP_TITLE}
         </title>
       </Helmet>
-      <Typography variant="h4">{`Ciao, ${context.user.name} 🎃`}</Typography>
-      <App key={'app'}>
-
-      </App>
+      <Typography variant="h4">{`Hello, ${context.user.name} 🎃`}</Typography>
+      <App key={'app'}/>
     </>
   );
 };

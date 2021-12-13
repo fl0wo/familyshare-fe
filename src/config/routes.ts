@@ -35,6 +35,31 @@ const routes: Array<Route> = [
     icon: DashboardIcon,
   },
   {
+    key: 'router-gh',
+    title: 'GitHub',
+    description: 'GitHub',
+    isEnabled: true,
+    icon: GitHubIcon,
+    subRoutes: [
+      {
+        key: 'router-gh-public',
+        title: 'Public Repos',
+        description: 'Public Repos',
+        path: '/gh/public',
+        isEnabled: true,
+        icon: PublicIcon,
+      },
+      {
+        key: 'router-gh-private',
+        title: 'Private Repos',
+        description: 'Private Repos',
+        path: '/gh/private',
+        isEnabled: false,
+        icon: PrivateIcon,
+      },
+    ],
+  },
+  {
     key: 'router-code',
     title: 'Code Editor',
     description: 'Code Editor',

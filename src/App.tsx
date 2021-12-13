@@ -19,7 +19,7 @@ function App() {
   const themeMode = useMemo(
     () => ({
       toggleThemeMode: () => {
-        setMode((prevMode) => (prevMode === LIGHT_MODE_THEME ? DARK_MODE_THEME : LIGHT_MODE_THEME));
+        setMode((prevMode: string) => (prevMode === LIGHT_MODE_THEME ? DARK_MODE_THEME : LIGHT_MODE_THEME));
       },
     }),
     []
@@ -28,7 +28,7 @@ function App() {
   const theme = useMemo(() => getAppTheme(mode), [mode]);
 
   const addRoute = (route: AppRoute) => (
-    <Route key={route.key} path={route.path} component={route.component || PageDefault} exact />
+    <Route key={route.key} path={route.path} component={route.component || PageDefault} exact/>
   );
 
   return (

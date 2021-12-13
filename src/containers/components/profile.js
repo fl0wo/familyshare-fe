@@ -12,7 +12,7 @@ export const HasJwt = ({
             <h3>
                 {user.email}[{user.verified ? 'ok' : 'nok'}]
             </h3>
-            <ul>
+{/*            <ul>
                 {
                     user.childrens.map((kid, i) => (
                         <li>
@@ -33,9 +33,9 @@ export const HasJwt = ({
                     ))
                 }
                 <button onClick={onKidAdd}>+</button>
-            </ul>
+            </ul>*/}
             <h2>{new Date().getTime()}</h2>
-            <div>
+{/*            <div>
                 {
                     <p onClick={()=>onEventSelect('-1')}>
                         Live following
@@ -48,7 +48,7 @@ export const HasJwt = ({
                         </p>
                     ))
                 }
-            </div>
+            </div>*/}
         </div>
     );
 }

@@ -15,7 +15,7 @@ const appStyle = {
 
 class App extends React.Component {
 
-    state = {
+    base = {
         jwt: null,
         map: null,
         user:null,
@@ -34,16 +34,16 @@ class App extends React.Component {
     }
 
     updateState() {
-        this.setState(this.state)
+        this.setState(this.base)
     }
 
     checkUpdates() {
         this.addNewPosToCurrentMarkers()
             .then(kids_locations => {
                 if (kids_locations.length > 0){
-                    this.state.livePaths = kids_locations;
-                    if (this.state.isLive) {
-                        this.state.map = this.getMapByMarkers(this.state.livePaths);
+                    this.base.livePaths = kids_locations;
+                    if (this.base.isLive) {
+                        this.base.map = this.getMapByMarkers(this.base.livePaths);
                         this.updateState()
                     }
                 }
@@ -85,11 +85,11 @@ class App extends React.Component {
 
     init(jwt) {
         if (jwt) {
-            this.state.jwt = jwt;
+            this.base.jwt = jwt;
 
             me().then(user => {
-                this.state.user = user;
-                this.state.map = null
+                this.base.user = user;
+                this.base.map = null
                 this.checkUpdates();
                 const interval =
                     setInterval(this.checkUpdates, 1000);
@@ -118,8 +118,8 @@ class App extends React.Component {
     onEventSelect(eventId){
 
         if (eventId==='-1'){
-            this.state.isLive=true;
-            this.state.map = this.getMapByMarkers(this.state.livePaths);
+            this.base.isLive=true;
+            this.base.map = this.getMapByMarkers(this.base.livePaths);
             this.updateState();
             return;
         }
@@ -138,11 +138,11 @@ class App extends React.Component {
 
         myEvent(eventId).then(event=>{
             if(event==null)return;
-            this.state.isLive = false;
-            this.state.selectedPaths= pathToMap(event);
+            this.base.isLive = false;
+            this.base.selectedPaths= pathToMap(event);
 
-            this.state.map = this.getMapByMarkers(
-                this.state.selectedPaths
+            this.base.map = this.getMapByMarkers(
+                this.base.selectedPaths
             );
             this.updateState();
         })
@@ -153,22 +153,22 @@ class App extends React.Component {
             <div style={appStyle}>
                 <Popup />
                 {
-                    this.state.jwt == null &&
+                    this.base.jwt == null &&
                     <div>
                         <RegisterForm onSubmit={this.handleRegister}/>
                         <LoginForm onSubmit={this.handleLogin}/>
                     </div>
                 }
                 {
-                    this.state.jwt &&
+                    this.base.jwt &&
                     <div>
                         <HasJwt
-                            user={this.state.user}
+                            user={this.base.user}
                             onKidSelect={this.onKidSelect}
                             onEventSelect={this.onEventSelect}
                             onKidAdd={this.onKidAdd}
                         />
-                        <Fragment>{this.state.map}</Fragment>
+                        <Fragment>{this.base.map}</Fragment>
                         <div>
                             <IntervalExample></IntervalExample>
                         </div>

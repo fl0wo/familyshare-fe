@@ -39,20 +39,20 @@ export const HasJwt = ({
                 <button onClick={onKidAdd}>+</button>
             </ul>
             <h2>{new Date().getTime()}</h2>
-{/*            <div>
+            <div key={'events'}>
                 {
-                    <p onClick={()=>onEventSelect('-1')}>
+                    <button key='live' onClick={()=>onEventSelect('-1')}>
                         Live following
-                    </p>
+                    </button>
                 }
                 {
                     user.events.map(e=>(
-                        <p onClick={()=>onEventSelect(e._id)}>
+                        <button key={e.title} onClick={()=>onEventSelect(e._id)}>
                             {e.title}
-                        </p>
+                        </button>
                     ))
                 }
-            </div>*/}
+            </div>
         </div>
     );
 }

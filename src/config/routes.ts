@@ -9,6 +9,7 @@ import {
   SettingsOutlined as SettingsIcon,
   ListAlt as ListIcon,
   CreditCard as BillingIcon,
+  PlusOne as KidRegister,
 } from '@mui/icons-material';
 
 import { Home } from '../pages/Home';
@@ -24,6 +25,16 @@ const routes: Array<Route> = [
     path: '/',
     isEnabled: true,
     icon: HomeIcon,
+    appendDivider: true,
+  },
+  {
+    key: 'add-kid',
+    title: 'Add Kid',
+    description: 'Register a Kid',
+    path: '/add-kid',
+    component : Home,
+    isEnabled: true,
+    icon: KidRegister,
     appendDivider: true,
   },
   {

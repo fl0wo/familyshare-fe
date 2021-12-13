@@ -12,28 +12,32 @@ export const HasJwt = ({
             <h3>
                 {user.email}[{user.verified ? 'ok' : 'nok'}]
             </h3>
-{/*            <ul>
+            <ul>
                 {
                     user.childrens.map((kid, i) => (
-                        <li>
-                            <div
-                                onClick={() => onKidSelect(i)}
-                            >
+                      <div key={kid}>
+                        <span >{kid.name}</span>
+                      </div>
+
+/*                      <i
+                        key={kid+i}
+                        onClick={() => onKidSelect(i)}>
+                        <li key={kid}>
                                 <span
-                                    style={{
-                                        borderRadius: "50%",
-                                        backgroundColor: kid.color,
-                                        height: "25px",
-                                        width: "25px"
-                                    }}
+                                  style={{
+                                    borderRadius: "50%",
+                                    backgroundColor: kid.color,
+                                    height: "25px",
+                                    width: "25px"
+                                  }}
                                 >----</span>
-                                <span>{kid.name}</span>
-                            </div>
+                          <span>{kid.name}</span>
                         </li>
-                    ))
+                      </i>*/
+                  ))
                 }
                 <button onClick={onKidAdd}>+</button>
-            </ul>*/}
+            </ul>
             <h2>{new Date().getTime()}</h2>
 {/*            <div>
                 {

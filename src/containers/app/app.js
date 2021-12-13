@@ -91,8 +91,7 @@ class App extends React.Component {
                 this.base.user = user;
                 this.base.map = null
                 this.checkUpdates();
-                const interval =
-                    setInterval(this.checkUpdates, 1000);
+                setInterval(this.checkUpdates, 1000);
             })
         }
     }

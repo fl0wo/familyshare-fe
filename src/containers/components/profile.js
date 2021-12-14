@@ -15,7 +15,7 @@ export const HasJwt = ({
             <ul>
                 {
                     user.childrens.map((kid, i) => (
-                      <div key={kid}>
+                      <div key={kid+i}>
                         <span >{kid.name}</span>
                       </div>
 

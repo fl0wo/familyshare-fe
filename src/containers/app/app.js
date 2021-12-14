@@ -13,17 +13,20 @@ const appStyle = {
     display: 'flex'
 };
 
-class App extends React.Component {
+import { startAction } from '../../utils/actions';
+import { connect } from 'react-redux';
 
-    base = {
-        jwt: null,
-        map: null,
-        user:null,
-        events:null,
-        isLive:true,
-        selectedPaths:[],
-        livePaths:[]
+const mapStateToProps = state => ({
+    ...state
+});
+
+const mapDispatchToProps = dispatch => ({
+    startAction: (ba) => {
+        dispatch(startAction(ba))
     }
+});
+
+class App extends React.Component {
 
     constructor(props) {
         super(props)
@@ -31,10 +34,13 @@ class App extends React.Component {
         this.checkUpdates = this.checkUpdates.bind(this)
         this.onKidSelect = this.onKidSelect.bind(this);
         this.onEventSelect = this.onEventSelect.bind(this);
+        this.base = {...props};
     }
 
     updateState() {
-        this.setState(this.base)
+        // TODO: CHANGE STATE ONLY IF KIDS ARE MOVING
+        this.props.startAction(this.base);
+        //this.base = {...this.props};
     }
 
     checkUpdates() {
@@ -115,7 +121,7 @@ class App extends React.Component {
     }
 
     onEventSelect(eventId){
-
+        this.base={...this.props}
         if (eventId==='-1'){
             this.base.isLive=true;
             this.base.map = this.getMapByMarkers(this.base.livePaths);
@@ -150,24 +156,23 @@ class App extends React.Component {
     render() {
         return (
             <div style={appStyle}>
-                <Popup />
                 {
-                    this.base.jwt == null &&
+                    this.props.jwt == null &&
                     <div>
                         <RegisterForm onSubmit={this.handleRegister}/>
                         <LoginForm onSubmit={this.handleLogin}/>
                     </div>
                 }
                 {
-                    this.base.jwt &&
+                    this.props.jwt &&
                     <div>
                         <HasJwt
-                            user={this.base.user}
+                            user={this.props.user}
                             onKidSelect={this.onKidSelect}
                             onEventSelect={this.onEventSelect}
                             onKidAdd={this.onKidAdd}
                         />
-                        <Fragment>{this.base.map}</Fragment>
+                        <Fragment>{this.props.map}</Fragment>
                         <div>
                             <IntervalExample></IntervalExample>
                         </div>
@@ -179,5 +184,4 @@ class App extends React.Component {
 
 }
 
-
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);

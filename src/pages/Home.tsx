@@ -19,28 +19,8 @@ export const Home = () => {
           {PAGE_TITLE_HOME} | {APP_TITLE}
         </title>
       </Helmet>
-      <App key={'app'}/>
+      <App
+        key={'app'}/>
     </>
   );
 };
-
-const LogoWrapper = styled('div')`
-  text-align: center;
-  margin-top: 6rem;
-`;
-
-const StyledLogo = styled('img')`
-  height: 40vmin;
-  pointer-events: none;
-  @media (prefers-reduced-motion: no-preference) {
-    animation: App-logo-spin infinite 15s linear;
-  }
-  @keyframes App-logo-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-`;

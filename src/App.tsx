@@ -28,11 +28,18 @@ function App() {
   const theme = useMemo(() => getAppTheme(mode), [mode]);
 
   const addRoute = (route: AppRoute) => (
-    <Route key={route.key} path={route.path} component={route.component || PageDefault} exact/>
+    <Route
+      key={route.key}
+      path={route.path}
+      component={route.component || PageDefault}
+
+
+      exact/>
   );
 
   return (
-    <AppContext.Provider value={appClient}>
+    <AppContext.Provider
+      value={appClient}>
       <ThemeModeContext.Provider value={themeMode}>
         <ThemeProvider theme={theme}>
           <CssBaseline />

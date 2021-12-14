@@ -36,6 +36,11 @@ const register = async (name: string, email: string, pwd: string) => {
 
 }
 
+const registerKid = async (name: string, kidId: string) => {
+  alert("insert "+ name + " " + kidId)
+}
+
+
 const getMyKids = async () => {
     if (jwt==null) return null;
 
@@ -81,4 +86,4 @@ let identity=(res: any)=>{
   return res
 };
 
-export {register,login, getMyKids, me, myEvent}
+export {register,login, getMyKids, me, myEvent,registerKid }

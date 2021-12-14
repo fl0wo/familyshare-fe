@@ -13,6 +13,7 @@ import {
 } from '@mui/icons-material';
 
 import { Home } from '../pages/Home';
+import {AddKid} from '../pages/AddKid'
 
 import { Route } from '../types/Route';
 
@@ -32,7 +33,7 @@ const routes: Array<Route> = [
     title: 'Add Kid',
     description: 'Register a Kid',
     path: '/add-kid',
-    component : Home,
+    component : AddKid,
     isEnabled: true,
     icon: KidRegister,
     appendDivider: true,

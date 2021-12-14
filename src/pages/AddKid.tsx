@@ -5,9 +5,9 @@ import { Helmet } from 'react-helmet';
 import { AppContext } from '../contexts';
 import { APP_TITLE, PAGE_TITLE_HOME } from '../utils/constants';
 // @ts-ignore
-import App from '../containers/app/app.js'
 
-export const Home = () => {
+
+export const AddKid = () => {
   const context = useContext(AppContext);
 
   return (
@@ -17,8 +17,15 @@ export const Home = () => {
           {PAGE_TITLE_HOME} | {APP_TITLE}
         </title>
       </Helmet>
-      <App
-        key={'app'}/>
+      <AddKidComponent
+        key={'addkid'}/>
     </>
   );
 };
+
+const AddKidComponent = () => {
+
+  return <div>
+    AddKid
+  </div>
+}

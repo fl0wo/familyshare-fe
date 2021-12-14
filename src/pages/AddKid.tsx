@@ -31,8 +31,9 @@ const AddKidComponent = () => {
 
   const registerChildren = ()=>{
     if(kidName.length>0 && kidId.length>0)
-      registerKid(kidName,kidId)
-        .then(()=>alert("done!"))
+      registerKid(kidName,kidId,
+        45.500517,12.260485)
+        .then(res=>alert(JSON.stringify(res)))
   }
 
   return <div>

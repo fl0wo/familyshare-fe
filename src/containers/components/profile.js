@@ -16,24 +16,22 @@ export const HasJwt = ({
                 {
                     user.childrens.map((kid, i) => (
                       <div key={kid+i}>
+                        <span
+                          style={{
+                            borderRadius: "50%",
+                            backgroundColor: kid.color,
+                            height: "25px",
+                            width: "25px"
+                          }}
+                        >----</span>
                         <span >{kid.name}</span>
                       </div>
 
-/*                      <i
+             /*         <div
                         key={kid+i}
                         onClick={() => onKidSelect(i)}>
-                        <li key={kid}>
-                                <span
-                                  style={{
-                                    borderRadius: "50%",
-                                    backgroundColor: kid.color,
-                                    height: "25px",
-                                    width: "25px"
-                                  }}
-                                >----</span>
-                          <span>{kid.name}</span>
-                        </li>
-                      </i>*/
+
+                      </div>*/
                   ))
                 }
                 <button onClick={onKidAdd}>+</button>

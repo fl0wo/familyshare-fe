@@ -36,8 +36,23 @@ const register = async (name: string, email: string, pwd: string) => {
 
 }
 
-const registerKid = async (name: string, kidId: string) => {
-  alert("insert "+ name + " " + kidId)
+const registerKid = async (name: string,
+                           kidId: string,
+                           lat:number,
+                           long:number) => {
+
+  return axios.post(BASEURL + "/profile/kid/add",
+    {
+    childId : kidId,
+    childName : name,
+    lat: lat,
+    long: long
+  },header(jwt))
+    .then((res: any)=>{
+      return res;
+    })
+    .catch(handleError);
+
 }
 
 
@@ -45,7 +60,7 @@ const getMyKids = async () => {
     if (jwt==null) return null;
 
     return axios.get<PositionsResponse[]>(BASEURL + "/positions/",header(jwt))
-        .then(identity)
+        .then(r=>r)
         .catch(handleError);
 
 }

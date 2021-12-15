@@ -3,8 +3,12 @@ export const startAction = (base: any) => ({
   payload: base
 });
 
-
 export const setLivePaths = (path: any) => ({
   type: "livepath",
   payload: path
+});
+
+export const setFirstTimeOnly = (wantMore: boolean) => ({
+  type: "liveupdate",
+  payload: wantMore
 });

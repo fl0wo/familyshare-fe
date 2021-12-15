@@ -9,7 +9,8 @@ export const INIT_BASE = {
   isLive:true,
   selectedPaths:[],
   livePaths:[],
-  number:1
+  number:1,
+  wantMore:true
 };
 
 function configureStore(base:any = INIT_BASE) {

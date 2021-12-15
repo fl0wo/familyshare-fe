@@ -10,12 +10,14 @@ import {
   ListAlt as ListIcon,
   CreditCard as BillingIcon,
   PlusOne as KidRegister,
+  Map as MapIcon
 } from '@mui/icons-material';
 
 import { Home } from '../pages/Home';
 import {AddKid} from '../pages/AddKid'
 
 import { Route } from '../types/Route';
+import LiveMap from '../pages/LiveMap';
 
 const routes: Array<Route> = [
   {
@@ -78,6 +80,16 @@ const routes: Array<Route> = [
     path: '/code-editor',
     isEnabled: true,
     icon: CodeIcon,
+    appendDivider: true,
+  },
+  {
+    key: 'router-livemap',
+    title: 'Live Map',
+    description: 'Live Map',
+    path: '/map-live',
+    isEnabled: true,
+    icon: MapIcon,
+    component: LiveMap,
     appendDivider: true,
   },
   {

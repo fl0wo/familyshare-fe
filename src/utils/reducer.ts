@@ -9,6 +9,11 @@ export default (state: any,
         ...state,
         livePaths : action.payload
       }
+    case "liveupdate":
+      return {
+        ...state,
+        wantMore : action.payload
+      }
     default:
       return state;
   }

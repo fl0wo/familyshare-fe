@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet';
 import { AppContext } from '../contexts';
 import { APP_TITLE, PAGE_TITLE_HOME } from '../utils/constants';
 // @ts-ignore
-import App from '../containers/app/app.js'
+import App from '../containers/app/logon.js'
 
 export const Home = () => {
   const context = useContext(AppContext);

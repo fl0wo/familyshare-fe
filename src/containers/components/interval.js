@@ -13,7 +13,7 @@ export const IntervalExample = () => {
     return (
         <div className="App">
             <header className="App-header">
-                {seconds} seconds have elapsed since mounting.
+                {seconds} sec passati dal mount.
             </header>
         </div>
     );

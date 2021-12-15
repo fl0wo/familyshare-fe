@@ -26,8 +26,8 @@ const LiveMap = (props:any) => {
       provider={stamenToner}
       defaultCenter={center}
       defaultZoom={18}
-      width={1000}
-      height={1000}
+      width={800}
+      height={600}
     >
       <PathDrawer kidsPaths={markers_array}/>
     </Map>;

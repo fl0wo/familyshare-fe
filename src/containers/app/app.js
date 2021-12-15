@@ -1,5 +1,5 @@
 import {getMyKids, login, me, myEvent, register} from '../api'
-import React, {Fragment} from "react";
+import React, {Fragment , useEffect, useState, useRef, useLayoutEffect } from "react";
 import {Map} from "pigeon-maps";
 import {stamenToner} from 'pigeon-maps/providers'
 import Popup from 'react-popup';
@@ -13,8 +13,10 @@ const appStyle = {
     display: 'flex'
 };
 
-import { startAction } from '../../utils/actions';
+import { startAction, setLivePaths } from '../../utils/actions';
 import { connect } from 'react-redux';
+
+import {INIT_BASE} from '../../utils/store'
 
 const mapStateToProps = state => ({
     ...state
@@ -23,41 +25,50 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     startAction: (ba) => {
         dispatch(startAction(ba))
+    },
+    setLivePaths :(paths) => {
+        dispatch(setLivePaths(paths))
     }
 });
 
-class App extends React.Component {
+const App = (props)=> {
 
-    constructor(props) {
-        super(props)
-        this.updateState = this.updateState.bind(this)
-        this.checkUpdates = this.checkUpdates.bind(this)
-        this.onKidSelect = this.onKidSelect.bind(this);
-        this.onEventSelect = this.onEventSelect.bind(this);
-        this.base = {...props};
-    }
+    let [base,setBase] = useState({...props});
+    const isFirstMount = useRef(false);
+    const previousFooRef = useRef(props.jwt);
 
-    updateState() {
-        // TODO: CHANGE STATE ONLY IF KIDS ARE MOVING
-        this.props.startAction(this.base);
+    // Understand why this works only on second render...wtf
+    useEffect(() => {
+        setInterval(checkUpdates, 1000);
+    }, [props.jwt]);
+
+    function updateState() {
+        base.number++;
+        props.startAction(base);
+        setBase(base);
         //this.base = {...this.props};
+
     }
 
-    checkUpdates() {
-        this.addNewPosToCurrentMarkers()
+    function checkUpdates() {
+        console.log("ehyyy")
+        addNewPosToCurrentMarkers()
             .then(kids_locations => {
                 if (kids_locations.length > 0){
-                    this.base.livePaths = kids_locations;
-                    if (this.base.isLive) {
-                        this.base.map = this.getMapByMarkers(this.base.livePaths);
-                        this.updateState()
+                    base.livePaths = kids_locations;
+                    if (base.isLive && kids_locations) {
+                        //setLivePaths(kids_locations);
+                        base.map = getMapByMarkers(kids_locations);
+                        updateState()
+                        isFirstMount.current=false
                     }
                 }
             })
     }
 
-    addNewPosToCurrentMarkers() {
+    function addNewPosToCurrentMarkers() {
         return getMyKids().then(kids => {
+            if(kids==null)return[];
             if (kids.data.length <= 0) return kids.data;
             return kids.data.map(kid =>
                 kid.positions.map(pos => {
@@ -72,7 +83,7 @@ class App extends React.Component {
         });
     }
 
-    getMapByMarkers(markers_array) {
+    function getMapByMarkers(markers_array) {
 
         let center = markers_array.length>0?
             toArray(markers_array[0][0]) :
@@ -89,43 +100,40 @@ class App extends React.Component {
         </Map>;
     }
 
-    init(jwt) {
+    function init(jwt) {
         if (jwt) {
-            this.base.jwt = jwt;
+            base.jwt = jwt;
 
             me().then(user => {
-                this.base.user = user;
-                this.base.map = null
-                this.checkUpdates();
-                setInterval(this.checkUpdates, 1000);
+                base.user = user;
+                checkUpdates();
             })
         }
     }
 
-    handleLogin = data => {
+    let handleLogin = data => {
         login(data.email, data.password)
-            .then((jwt)=>this.init(jwt));
+            .then((jwt)=>init(jwt));
     };
 
-    handleRegister = data => {
+    let handleRegister = data => {
         register(data.name, data.email, data.password)
-            .then((jwt)=>this.init(jwt));
+            .then((jwt)=>init(jwt));
     };
 
-    onKidSelect(i){
+    function onKidSelect(i){
         Popup.alert('alert'+i);
     }
 
-    onKidAdd(){
+    function onKidAdd(){
         Popup.alert('add kiddo');
     }
 
-    onEventSelect(eventId){
-        this.base={...this.props}
+    function onEventSelect(eventId){
         if (eventId==='-1'){
-            this.base.isLive=true;
-            this.base.map = this.getMapByMarkers(this.base.livePaths);
-            this.updateState();
+            base.isLive=true;
+            base.map = getMapByMarkers(props.livePaths);
+            updateState();
             return;
         }
 
@@ -143,45 +151,47 @@ class App extends React.Component {
 
         myEvent(eventId).then(event=>{
             if(event==null)return;
-            this.base.isLive = false;
-            this.base.selectedPaths= pathToMap(event);
+            base.isLive = false;
+            base.selectedPaths= pathToMap(event);
 
-            this.base.map = this.getMapByMarkers(
-                this.base.selectedPaths
+            base.map = getMapByMarkers(
+                base.selectedPaths
             );
-            this.updateState();
+            updateState();
         })
     }
 
-    render() {
-        return (
-            <div style={appStyle}>
-                {
-                    this.props.jwt == null &&
+    return (
+        <div style={appStyle}>
+            {
+                base.jwt == null &&
+                <div>
+                    <RegisterForm onSubmit={handleRegister}/>
+                    <LoginForm onSubmit={handleLogin}/>
+                </div>
+            }
+            {
+                base.jwt &&
+                <div>
+                    <HasJwt
+                        user={base.user}
+                        onKidSelect={onKidSelect}
+                        onEventSelect={onEventSelect}
+                        onKidAdd={onKidAdd}
+                    />
                     <div>
-                        <RegisterForm onSubmit={this.handleRegister}/>
-                        <LoginForm onSubmit={this.handleLogin}/>
+                        {base.number}
                     </div>
-                }
-                {
-                    this.props.jwt &&
+                    <Fragment
+                      key={props.map}
+                    >{props.map}</Fragment>
                     <div>
-                        <HasJwt
-                            user={this.props.user}
-                            onKidSelect={this.onKidSelect}
-                            onEventSelect={this.onEventSelect}
-                            onKidAdd={this.onKidAdd}
-                        />
-                        <Fragment>{this.props.map}</Fragment>
-                        <div>
-                            <IntervalExample></IntervalExample>
-                        </div>
+                        <IntervalExample></IntervalExample>
                     </div>
-                }
-            </div>
-        );
-    }
-
+                </div>
+            }
+        </div>
+    );
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

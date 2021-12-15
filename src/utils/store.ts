@@ -1,15 +1,18 @@
 import { createStore } from "redux";
 import reducer from '../utils/reducer'
 
-function configureStore(base:any ={
+export const INIT_BASE = {
   jwt: null,
   map: null,
   user:null,
   events:null,
   isLive:true,
   selectedPaths:[],
-  livePaths:[]
-}) {
+  livePaths:[],
+  number:1
+};
+
+function configureStore(base:any = INIT_BASE) {
   return createStore(reducer,base);
 }
 

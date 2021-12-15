@@ -4,6 +4,11 @@ export default (state: any,
   switch (action.type) {
     case "base":
       return action.payload
+    case "livepath":
+      return {
+        ...state,
+        livePaths : action.payload
+      }
     default:
       return state;
   }

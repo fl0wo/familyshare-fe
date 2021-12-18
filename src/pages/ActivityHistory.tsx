@@ -39,6 +39,12 @@ const ActivityHistory = (props:any) => {
     })
   }
 
+  //TODO: fix date
+  function date_format(date:string){
+    let d = new Date(date);
+    return d.getMonth()+"/"+d.getDay()+ " " + d.getHours() + ":"+d.getMinutes();
+  }
+
   return (
     <>
       <Helmet>
@@ -60,12 +66,15 @@ const ActivityHistory = (props:any) => {
               onClick={()=>onEventSelect(e._id)}>
               <ListItemAvatar>
                 <Avatar>
-                  <ImageIcon />
+                  <img
+                    alt={e.title}
+                    src={"https://eu.ui-avatars.com/api/?background=random&name="+e.title}>
+                  </img>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={e.title}
-                secondary="Jan 9, 2014"
+                secondary={date_format(e.date_start) + " - " + date_format(e.date_end)}
               />
             </ListItemButton>
             ))

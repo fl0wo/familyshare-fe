@@ -16,7 +16,7 @@ import {
 import { Home } from '../pages/Home';
 import {AddKid} from '../pages/AddKid'
 
-import { Route } from '../types/Route';
+import { Route } from '../types';
 import LiveMap from '../pages/LiveMap';
 
 const routes: Array<Route> = [
@@ -29,6 +29,7 @@ const routes: Array<Route> = [
     isEnabled: true,
     icon: HomeIcon,
     appendDivider: true,
+    isLoginRequired: false
   },
   {
     key: 'add-kid',
@@ -39,6 +40,7 @@ const routes: Array<Route> = [
     isEnabled: true,
     icon: KidRegister,
     appendDivider: true,
+    isLoginRequired: true
   },
   {
     key: 'router-dashboard',
@@ -47,6 +49,8 @@ const routes: Array<Route> = [
     path: '/dashboard',
     isEnabled: true,
     icon: DashboardIcon,
+    isLoginRequired: false
+
   },
   {
     key: 'router-gh',
@@ -54,6 +58,7 @@ const routes: Array<Route> = [
     description: 'GitHub',
     isEnabled: true,
     icon: GitHubIcon,
+    isLoginRequired: false,
     subRoutes: [
       {
         key: 'router-gh-public',
@@ -62,6 +67,7 @@ const routes: Array<Route> = [
         path: '/gh/public',
         isEnabled: true,
         icon: PublicIcon,
+        isLoginRequired: false
       },
       {
         key: 'router-gh-private',
@@ -70,6 +76,7 @@ const routes: Array<Route> = [
         path: '/gh/private',
         isEnabled: false,
         icon: PrivateIcon,
+        isLoginRequired: false
       },
     ],
   },
@@ -81,6 +88,7 @@ const routes: Array<Route> = [
     isEnabled: true,
     icon: CodeIcon,
     appendDivider: true,
+    isLoginRequired: false
   },
   {
     key: 'router-livemap',
@@ -91,6 +99,7 @@ const routes: Array<Route> = [
     icon: MapIcon,
     component: LiveMap,
     appendDivider: true,
+    isLoginRequired: true
   },
   {
     key: 'router-my-account',
@@ -99,6 +108,7 @@ const routes: Array<Route> = [
     path: '/account',
     isEnabled: true,
     icon: UserIcon,
+    isLoginRequired: false,
     subRoutes: [
       {
         key: 'router-settings',
@@ -107,6 +117,7 @@ const routes: Array<Route> = [
         path: '/account/settings',
         isEnabled: true,
         icon: SettingsIcon,
+        isLoginRequired: false
       },
       {
         key: 'router-preferences',
@@ -115,6 +126,7 @@ const routes: Array<Route> = [
         path: '/account/preferences',
         isEnabled: true,
         icon: ListIcon,
+        isLoginRequired: false
       },
       {
         key: 'router-billing',
@@ -123,6 +135,7 @@ const routes: Array<Route> = [
         path: '/account/billing',
         isEnabled: true,
         icon: BillingIcon,
+        isLoginRequired: false
       },
     ],
   },

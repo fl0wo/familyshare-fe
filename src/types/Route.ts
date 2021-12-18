@@ -67,6 +67,18 @@ export type Route = {
   isEnabled: boolean;
 
   /**
+   * The status of the route
+   * @type {boolean}
+   * @memberof Route
+   * @required
+   * @example
+   * true
+   * @default
+   * true
+   */
+  isLoginRequired: boolean;
+
+  /**
    * The icon that illustrates the route
    * @type {string}
    * @memberof Route

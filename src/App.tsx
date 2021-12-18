@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import { getMyKids } from './containers/api';
 import { setFirstTimeOnly, setLivePaths, startAction } from './utils/actions';
 
-function App(props:any) {
+function App(props: any) {
   const [mode, setMode] = useState<typeof LIGHT_MODE_THEME | typeof DARK_MODE_THEME>(DARK_MODE_THEME);
   const appClient = new AppClient();
 
@@ -23,7 +23,7 @@ function App(props:any) {
     () => ({
       toggleThemeMode: () => {
         setMode((prevMode: string) => (prevMode === LIGHT_MODE_THEME ? DARK_MODE_THEME : LIGHT_MODE_THEME));
-      },
+      }
     }),
     []
   );
@@ -31,22 +31,22 @@ function App(props:any) {
   const theme = useMemo(() => getAppTheme(mode), [mode]);
 
   useEffect(() => {
-    let x=1;
+    let x = 1;
 
     function addNewPosToCurrentMarkers() {
       return getMyKids().then(kids => {
-        if(kids==null)return[];
+        if (kids == null) return [];
         if (kids.data.length <= 0) return kids.data;
         return kids.data.map(kid =>
           kid.positions.map(pos => {
               return {
-                lat : pos.coords.lat,
+                lat: pos.coords.lat,
                 long: pos.coords.long,
                 color: kid.color
-              }
+              };
             }
           )
-        )
+        );
       });
     }
 
@@ -77,7 +77,7 @@ function App(props:any) {
       key={route.key}
       path={route.path}
       component={route.component || PageDefault}
-      exact/>
+      exact />
   );
 
   return (
@@ -89,9 +89,12 @@ function App(props:any) {
           <Router>
             <Switch>
               <Layout>
-                {routes.map((route: AppRoute) =>
-                  route.subRoutes ? route.subRoutes.map((item: AppRoute) => addRoute(item)) : addRoute(route)
-                )}
+                {routes
+                  .filter((route: AppRoute) => !route.isLoginRequired || props.jwt)
+                  .map((route: AppRoute) =>
+                      route.subRoutes ? route.subRoutes.map((item: AppRoute) => addRoute(item)) : addRoute(route)
+                  )
+                }
               </Layout>
             </Switch>
           </Router>
@@ -100,14 +103,15 @@ function App(props:any) {
     </AppContext.Provider>
   );
 }
+
 const mapStateToProps = (state: any) => ({
   ...state
 });
 
-const mapDispatchToProps = (dispatch:any) => ({
-  setLivePaths :(paths:any) => {
-    dispatch(setLivePaths(paths))
+const mapDispatchToProps = (dispatch: any) => ({
+  setLivePaths: (paths: any) => {
+    dispatch(setLivePaths(paths));
   }
 });
 
-export default connect(mapStateToProps,mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

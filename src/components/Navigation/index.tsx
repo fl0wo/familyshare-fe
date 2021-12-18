@@ -1,6 +1,6 @@
 import { Drawer as MuiDrawer, styled } from '@mui/material';
 
-import { Routes } from './Routes';
+import Routes from './Routes';
 
 import { DRAWER_WIDTH } from '../../utils/constants';
 import { navClosedMixin, navOpenedMixin } from '../../styles/mixins';

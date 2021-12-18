@@ -5,9 +5,11 @@ import { RouteItem } from './RouteItem';
 import { SignOutRoute } from './SignOutRoute';
 
 import { routes } from '../../../config';
-import { Route } from '../../../types';
+import { Route as AppRoute, Route } from '../../../types';
+import { setLivePaths } from '../../../utils/actions';
+import { connect } from 'react-redux';
 
-export const Routes = () => {
+const Routes = (props:any) => {
   const [routesState, setRoutesStage] = useState<Route[]>(routes);
 
   const handleMenuClick = (route: Route) => {
@@ -23,7 +25,9 @@ export const Routes = () => {
   return (
     <>
       <List component="nav" sx={{ height: '100%' }}>
-        {routesState.map((route: Route) => (
+        {routesState
+          .filter((route: AppRoute) => !route.isLoginRequired || props.jwt)
+          .map((route: Route) => (
           <div key={route.key}>
             {route.subRoutes ? (
               <>
@@ -47,3 +51,9 @@ export const Routes = () => {
     </>
   );
 };
+
+const mapStateToProps = (state: any) => ({
+  ...state
+});
+
+export default connect(mapStateToProps)(Routes);

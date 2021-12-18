@@ -6,6 +6,14 @@ import { myEvent } from '../containers/api';
 import { setFirstTimeOnly, setLivePaths, setSelectedPaths, startAction } from '../utils/actions';
 import SelectedMap from './SelectedMap';
 
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import ImageIcon from '@mui/icons-material/Image';
+import { ListItemButton } from '@mui/material';
+
 const ActivityHistory = (props:any) => {
 
 
@@ -43,15 +51,31 @@ const ActivityHistory = (props:any) => {
       </div>
 
       <div key={'events'}>
-        {
-          props.user.events.map((e:any)=>(
-            <button key={e.title} onClick={()=>onEventSelect(e._id)}>
-              {e.title}
-            </button>
-          ))
-        }
+
+        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+          {
+            props.user.events.map((e:any)=>(
+              // eslint-disable-next-line react/jsx-key
+            <ListItemButton
+              onClick={()=>onEventSelect(e._id)}>
+              <ListItemAvatar>
+                <Avatar>
+                  <ImageIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={e.title}
+                secondary="Jan 9, 2014"
+              />
+            </ListItemButton>
+            ))
+          }
+
+        </List>
+
 
       </div>
+
       {
         props.selectedPaths &&
         <SelectedMap>

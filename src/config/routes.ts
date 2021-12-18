@@ -10,7 +10,7 @@ import {
   ListAlt as ListIcon,
   CreditCard as BillingIcon,
   PlusOne as KidRegister,
-  Map as MapIcon
+  Map as MapIcon, LocalActivity, Timer, History
 } from '@mui/icons-material';
 
 import { Home } from '../pages/Home';
@@ -18,6 +18,7 @@ import AddKid from '../pages/AddKid'
 
 import { Route } from '../types';
 import LiveMap from '../pages/LiveMap';
+import ActivityHistory from '../pages/ActivityHistory';
 
 const routes: Array<Route> = [
   {
@@ -43,6 +44,35 @@ const routes: Array<Route> = [
     isLoginRequired: true
   },
   {
+    key: 'my-events',
+    title: 'Events',
+    description: 'Events',
+    isEnabled: true,
+    icon: LocalActivity,
+    isLoginRequired: true,
+    subRoutes: [
+      {
+        key: 'my-events-current',
+        title: 'Current Activity',
+        description: 'Current Activity',
+        path: '/events/current',
+        isEnabled: true,
+        icon: Timer,
+        isLoginRequired: true,
+      },
+      {
+        key: 'my-events-history',
+        title: 'Activity History',
+        description: 'Activity History',
+        path: '/events/history',
+        isEnabled: true,
+        icon: History,
+        isLoginRequired: true,
+        component : ActivityHistory
+      },
+    ],
+  },
+  {
     key: 'router-dashboard',
     title: 'Dashboard',
     description: 'Dashboard',
@@ -50,7 +80,6 @@ const routes: Array<Route> = [
     isEnabled: true,
     icon: DashboardIcon,
     isLoginRequired: false
-
   },
   {
     key: 'router-gh',

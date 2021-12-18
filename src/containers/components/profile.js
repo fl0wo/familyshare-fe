@@ -37,20 +37,6 @@ export const HasJwt = ({
                 <button onClick={onKidAdd}>+</button>
             </ul>
             <h2>{new Date().getTime()}</h2>
-            <div key={'events'}>
-                {
-                    <button key='live' onClick={()=>onEventSelect('-1')}>
-                        Live following
-                    </button>
-                }
-                {
-                    user.events.map(e=>(
-                        <button key={e.title} onClick={()=>onEventSelect(e._id)}>
-                            {e.title}
-                        </button>
-                    ))
-                }
-            </div>
 
         </div>
     );

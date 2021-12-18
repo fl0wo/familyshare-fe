@@ -14,7 +14,7 @@ import {
 } from '@mui/icons-material';
 
 import { Home } from '../pages/Home';
-import {AddKid} from '../pages/AddKid'
+import AddKid from '../pages/AddKid'
 
 import { Route } from '../types';
 import LiveMap from '../pages/LiveMap';

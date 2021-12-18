@@ -4,6 +4,7 @@ import Routes from './Routes';
 
 import { DRAWER_WIDTH } from '../../utils/constants';
 import { navClosedMixin, navOpenedMixin } from '../../styles/mixins';
+import React from 'react';
 
 interface NavigationProps {
   open: boolean | undefined;

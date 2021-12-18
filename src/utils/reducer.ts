@@ -14,6 +14,13 @@ export default (state: any,
         ...state,
         wantMore : action.payload
       }
+    case "newuser" :
+      alert(JSON.stringify(action.payload))
+      console.log(JSON.stringify(action.payload))
+      return {
+        ...state,
+        user: action.payload
+      }
     default:
       return state;
   }

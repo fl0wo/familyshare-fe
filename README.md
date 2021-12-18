@@ -7,7 +7,7 @@ npm run start
 
 ## NextVersion
 TODO : 
-    - Nascondere i bottoni che richiedono il login.
+    - Nascondere i bottoni che richiedono il login. [V]
     - Finire implementazione di AddKid
     - Ottimizzare show events.
     - Mostrare cronometro dell'attivita' corrente.

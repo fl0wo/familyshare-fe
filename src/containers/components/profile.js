@@ -5,7 +5,7 @@ export const HasJwt = ({
                            onKidSelect,
                            onKidAdd,
                            onEventSelect}) => {
-    user = user?.data;
+
     return (
         <div>
             <h1>Welcome {user.role} {user.name}!</h1>

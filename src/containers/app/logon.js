@@ -1,10 +1,7 @@
-import { getMyKids, login, me, myEvent, register } from '../api';
-import React, { Fragment, useEffect, useRef, useState } from 'react';
-import { Map } from 'pigeon-maps';
-import { stamenToner } from 'pigeon-maps/providers';
+import { login, me, myEvent, register } from '../api';
+import React, { useRef, useState } from 'react';
 import Popup from 'react-popup';
-import { IntervalExample } from '../components/interval';
-import { PathDrawer, toArray } from '../components/pathdrawer';
+
 import { HasJwt } from '../components/profile';
 import { LoginForm, RegisterForm } from '../components/auth';
 import { setFirstTimeOnly, setLivePaths, startAction } from '../../utils/actions';
@@ -37,44 +34,18 @@ const Logon = (props)=> {
     const previousFooRef = useRef(props.jwt);
     let [logon,setHasLogon] = useState(false);
 
-  /*  // Understand why this works only on second render...wtf
-    useEffect(() => {
-
-        function checkUpdates() {
-            console.log('ehyyy');
-            addNewPosToCurrentMarkers()
-              .then(kids_locations => {
-                  if (kids_locations.length > 0) {
-                      base.livePaths = kids_locations;
-                      if (base.isLive && kids_locations) {
-                          //setLivePaths(kids_locations);
-                          base.map = getMapByMarkers(kids_locations);
-                          updateState();
-                      }
-                  }
-              });
-        }
-
-        return () => {
-            setInterval(checkUpdates, 1000);
-        };
-    }, [logon]);
-*/
-
     function updateState() {
         base.number++;
         props.startAction(base);
         setBase(base);
-        //this.base = {...this.props};
-
     }
 
     function init(jwt) {
         if (jwt) {
             base.jwt = jwt;
 
-            me().then(user => {
-                base.user = user;
+            me().then(response => {
+                base.user = response.data;
                 setHasLogon(true);
                 updateState();
                 //checkUpdates();

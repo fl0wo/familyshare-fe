@@ -71,33 +71,6 @@ const Logon = (props)=> {
         Popup.alert('add kiddo');
     }
 
-    function onEventSelect(eventId){
-        if (eventId==='-1'){
-            base.isLive=true;
-            updateState();
-            return;
-        }
-
-        function pathToMap(event) {
-            return event.data.paths
-                .filter(pa=>pa.positions.length>0)
-                .map((pa)=>{
-
-                return pa.positions.map((po) => ({
-                    ...po.coords,
-                    color:pa.color
-                }))
-            });
-        }
-
-        myEvent(eventId).then(event=>{
-            if(event==null)return;
-            base.isLive = false;
-            base.selectedPaths= pathToMap(event);
-            updateState();
-        })
-    }
-
     return (
         <div style={appStyle}>
             {
@@ -113,7 +86,6 @@ const Logon = (props)=> {
                     <HasJwt
                         user={base.user}
                         onKidSelect={onKidSelect}
-                        onEventSelect={onEventSelect}
                         onKidAdd={onKidAdd}
                     />
                 </div>

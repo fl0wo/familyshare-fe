@@ -7,7 +7,7 @@ export const INIT_BASE = {
   user:null,
   events:null,
   isLive:true,
-  selectedPaths:[],
+  selectedPaths:null,
   livePaths:[],
   number:1,
   wantMore:true

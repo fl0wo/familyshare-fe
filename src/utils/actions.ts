@@ -10,6 +10,11 @@ export const setLivePaths = (path: any) => ({
   payload: path
 });
 
+export const setSelectedPaths = (path: any) => ({
+  type: "selectedpath",
+  payload: path
+});
+
 export const setFirstTimeOnly = (wantMore: boolean) => ({
   type: "liveupdate",
   payload: wantMore

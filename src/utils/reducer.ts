@@ -14,6 +14,11 @@ export default (state: any,
         ...state,
         wantMore : action.payload
       }
+    case "selectedpath":
+      return {
+        ...state,
+        selectedPaths : action.payload
+      }
     case "newuser" :
       alert(JSON.stringify(action.payload))
       console.log(JSON.stringify(action.payload))

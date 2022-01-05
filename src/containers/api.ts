@@ -4,7 +4,7 @@ import { ProfileResponse } from './models/profile-response';
 import { PositionsResponse } from './models/positions-response';
 
 let jwt:any = null;
-const BASEURL = "http://localhost:3000";
+const BASEURL = "http://vps-487579d2.vps.ovh.net:5001";
 
 const login = async (email: string, pwd: string) => {
 
@@ -83,6 +83,19 @@ const myEvent = async (eventId: any) => {
         header(jwt))
         .then(identity)
         .catch(handleError);
+}
+
+const myEventAdd = async (eventName: string, eventDurationMinutes:string) => {
+  if (jwt==null) return null;
+
+  return axios.post(BASEURL + "/profile/event/add",
+    {
+      title : eventName,
+      duration : eventDurationMinutes
+    },
+    header(jwt))
+    .then(identity)
+    .catch(handleError);
 }
 
 function handleError(err: any) {

@@ -19,6 +19,7 @@ import AddKid from '../pages/AddKid'
 import { Route } from '../types';
 import LiveMap from '../pages/LiveMap';
 import ActivityHistory from '../pages/ActivityHistory';
+import ActivityCurrent from '../pages/ActivityCurrent';
 
 const routes: Array<Route> = [
   {
@@ -59,6 +60,7 @@ const routes: Array<Route> = [
         isEnabled: true,
         icon: Timer,
         isLoginRequired: true,
+        component : ActivityCurrent
       },
       {
         key: 'my-events-history',

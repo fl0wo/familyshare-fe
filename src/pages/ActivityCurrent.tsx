@@ -20,8 +20,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 
-import { updateUser } from '../utils/actions';
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
+import { updateUser } from '../utils/actions';
+import "../styles/countdown.css";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 const ActivityCurrent = (props:any) => {
 
@@ -46,12 +50,6 @@ const ActivityCurrent = (props:any) => {
     })
   }
 
-  //TODO: fix date
-  function date_format(date:string){
-    let d = new Date(date);
-    return d.getMonth()+"/"+d.getDay()+ " " + d.getHours() + ":"+d.getMinutes();
-  }
-
   let [eventDuration,setEventDuration]= useState(30)
   let [eventTitle,setEventTitle]= useState('titolo evento')
   const [open, setOpen] = useState(false);
@@ -59,7 +57,10 @@ const ActivityCurrent = (props:any) => {
   const sliderLabel = 'Duration';
 
   const handleClickOpen = () => {
-    // UPDATE USER
+    setOpen(true);
+  };
+
+  const handleErrorOpen = () => {
     setOpen(true);
   };
 
@@ -68,22 +69,79 @@ const ActivityCurrent = (props:any) => {
   };
 
   const addNewEvent = ()=>{
-    if(eventDuration>0 && eventTitle.length>0)
-      myEventAdd(eventTitle, eventDuration + '')
-        .then(res=>{
-          me().then(response=>{
-            props.updateUser(response.data);
-            handleClickOpen();
-          });
-        })
-        .catch(err=>{
-          alert("Error");
-        })
+    if(hasCurrentEventRunning()){
+      handleErrorOpen();
+    }else {
+      if(eventDuration>0 && eventTitle.length>0)
+        myEventAdd(eventTitle, eventDuration + '')
+          .then(res=>{
+            me().then(response=>{
+              props.updateUser(response.data);
+              handleClickOpen();
+            });
+          })
+          .catch(err=>{
+            alert("Error");
+          })
+    }
+
+
   }
 
   const handleChange = (e: Event, newValue: number | number[]) => {
     setEventDuration(newValue as number);
   };
+
+  function getCurrentEvent() {
+    return props.user.events.filter((e:any)=>{
+        return new Date(e.date_end) > new Date()
+      }
+    )[0];
+  }
+
+  function date_format(date:string){
+    let d = new Date(date);
+    return d.getDate() + "/" + (d.getMonth() + 1)+ " " + d.getHours() + ":"+d.getMinutes();
+  }
+
+  // @ts-ignore
+  const renderTime = ({ remainingTime }) => {
+    if (remainingTime === 0) {
+      return <div className="timer">Too lale...</div>;
+    }
+
+    return (
+      <div className="timer">
+        <div className="text">Remaining</div>
+        <div className="value">{remainingTime}</div>
+        <div className="text">seconds</div>
+      </div>
+    );
+  };
+
+  function getDurationOfCurrentEvent() {
+    let ev = getCurrentEvent();
+    const date1:Date = new Date(ev.date_start);
+    const date2:Date = new Date(ev.date_end);
+    // @ts-ignore
+    const diffTime:number = Math.abs(date2 - date1);
+    const diffSec = Math.ceil(diffTime / 1000);
+    return diffSec;
+  }
+
+  function getInitialRemainingOfCurrentEvent() {
+    let ev = getCurrentEvent();
+    const date1:Date = new Date();
+    const date2:Date = new Date(ev.date_end);
+    // @ts-ignore
+    const diffTime:number = Math.abs(date2 - date1);
+    const diffSec = Math.ceil(diffTime / 1000);
+    return diffSec;
+  }
+
+  function hasCurrentEventRunning() {
+    return getCurrentEvent()!=null;
+  }
 
   return (
     <>
@@ -92,36 +150,104 @@ const ActivityCurrent = (props:any) => {
           {PAGE_TITLE_HOME} | {APP_TITLE}
         </title>
       </Helmet>
-      <div>
-        Ciao Activity Current
-      </div>
 
       <div key={'add-event'}>
 
+        <TextField id="outlined-basic"
+                   label="title"
+                   value={eventTitle}
+                   onChange={e=>setEventTitle(e.target.value)}
+                   variant="outlined" />
+
+        <div>
+          <p>Duration</p>
+          <Slider
+            defaultValue={30}
+            min={5}
+            max={120}
+            getAriaLabel={() => 'Duration'}
+            aria-valuetext={sliderLabel}
+            value={eventDuration}
+            onChange={handleChange}
+            valueLabelDisplay="auto" />
+        </div>
+        {
+          hasCurrentEventRunning() &&
+          <div>
+            <Button disabled variant="outlined">New Event</Button>
+            <Alert severity="warning">
+              <AlertTitle>Error</AlertTitle>
+              This is an error alert — <strong>check it out!</strong>
+            </Alert>
+          </div>
+        }
+
+        {
+          !hasCurrentEventRunning() &&
+          <div>
+            <Button
+              onClick={()=>addNewEvent()}
+              variant="outlined">New Event</Button>
+          </div>
+        }
+
       </div>
 
-      <TextField id="outlined-basic"
-                 label="title"
-                 value={eventTitle}
-                 onChange={e=>setEventTitle(e.target.value)}
-                 variant="outlined" />
+      {
+        hasCurrentEventRunning() &&
+        <div>
+          <p>
+            Title :
+            {
+              getCurrentEvent().title
+            }
+          </p>
+          <p>
+            Duration Range :
+            {
+              date_format(getCurrentEvent().date_start) + ' - ' +
+              date_format(getCurrentEvent().date_end)
+            }
+          </p>
 
-      <div>
-        <p>Duration</p>
-        <Slider
-          defaultValue={30}
-          min={5}
-          max={120}
-          getAriaLabel={() => 'Duration'}
-          aria-valuetext={sliderLabel}
-          value={eventDuration}
-          onChange={handleChange}
-          valueLabelDisplay="auto" />
-      </div>
+          <div>
+            Children of this particular event:
+            <List dense={true}>
+              {
+                getCurrentEvent().childrens.map((kid: any, i: number) => (
+                  <ListItem key={kid._id}>
+                    <ListItemText
+                      primary={kid.name}
+                      secondary={'['+kid.id+']'}
+                    />
+                  </ListItem>
+                ))
+              }
+            </List>
+          </div>
 
-      <Button
-        onClick={()=>addNewEvent()}
-        variant="outlined">New Event</Button>
+          <div>
+            <div className="timer-wrapper">
+              <CountdownCircleTimer
+                isPlaying
+                duration={getDurationOfCurrentEvent()}
+                initialRemainingTime={getInitialRemainingOfCurrentEvent()}
+                colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+                colorsTime={[getDurationOfCurrentEvent(),
+                  getDurationOfCurrentEvent()/4,
+                  getDurationOfCurrentEvent()/2,
+                  0]}
+                onComplete={() => ({ shouldRepeat: true, delay: 1 })}
+              >
+                {renderTime}
+              </CountdownCircleTimer>
+            </div>
+            <p className="info">
+              Estimated duration of the event currently running.
+            </p>
+          </div>
+        </div>
+      }
 
       <Dialog
         open={open}

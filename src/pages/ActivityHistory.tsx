@@ -49,9 +49,6 @@ const ActivityHistory = (props:any) => {
           {PAGE_TITLE_HOME} | {APP_TITLE}
         </title>
       </Helmet>
-      <div>
-        Ciao Activity History
-      </div>
 
       <div key={'events'}>
 

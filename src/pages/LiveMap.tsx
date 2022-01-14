@@ -13,8 +13,15 @@ import { Map } from 'pigeon-maps';
 import { stamenToner } from 'pigeon-maps/providers';
 // @ts-ignore
 import { PathDrawer, toArray } from '../containers/components/pathdrawer.js';
+import useWindowDimensions from '../utils/window-dimensions';
 
 const LiveMap = (props:any) => {
+
+  const { height, width } = useWindowDimensions();
+
+  function min(a:number,b:number){
+    return a<b?a:b;
+  }
 
   function getMapByMarkers(markers_array: any[]) {
     console.log("hey rerendering live map!");
@@ -26,8 +33,8 @@ const LiveMap = (props:any) => {
       provider={stamenToner}
       defaultCenter={center}
       defaultZoom={18}
-      width={800}
-      height={600}
+      width={min(800,width-(width*20/100))}
+      height={min(600,height-(height*20/100))}
     >
       <PathDrawer kidsPaths={markers_array}/>
     </Map>;
@@ -36,6 +43,11 @@ const LiveMap = (props:any) => {
 
   return (
     <div>
+
+      <div>
+        width: {width} ~ height: {height}
+      </div>
+
     {
       (props.jwt == null)  &&
       <div>

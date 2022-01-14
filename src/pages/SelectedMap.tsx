@@ -4,8 +4,15 @@ import { Map } from 'pigeon-maps';
 import { stamenToner } from 'pigeon-maps/providers';
 import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import useWindowDimensions from '../utils/window-dimensions';
 
 const SelectedMap = (props:any) => {
+
+  const { height, width } = useWindowDimensions();
+
+  function min(a:number,b:number){
+    return a<b?a:b;
+  }
 
   function getMapByMarkers(markers_array: any[]) {
     if (markers_array.length<=0)
@@ -19,8 +26,8 @@ const SelectedMap = (props:any) => {
       provider={stamenToner}
       defaultCenter={center}
       defaultZoom={18}
-      width={800}
-      height={600}
+      width={min(800,width-(width*20/100))}
+      height={min(600,height-(height*20/100))}
     >
       <PathDrawer kidsPaths={markers_array}/>
     </Map>;

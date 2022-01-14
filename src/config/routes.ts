@@ -75,53 +75,6 @@ const routes: Array<Route> = [
     ],
   },
   {
-    key: 'router-dashboard',
-    title: 'Dashboard',
-    description: 'Dashboard',
-    path: '/dashboard',
-    isEnabled: true,
-    icon: DashboardIcon,
-    isLoginRequired: false
-  },
-  {
-    key: 'router-gh',
-    title: 'GitHub',
-    description: 'GitHub',
-    isEnabled: true,
-    icon: GitHubIcon,
-    isLoginRequired: false,
-    subRoutes: [
-      {
-        key: 'router-gh-public',
-        title: 'Public Repos',
-        description: 'Public Repos',
-        path: '/gh/public',
-        isEnabled: true,
-        icon: PublicIcon,
-        isLoginRequired: false
-      },
-      {
-        key: 'router-gh-private',
-        title: 'Private Repos',
-        description: 'Private Repos',
-        path: '/gh/private',
-        isEnabled: false,
-        icon: PrivateIcon,
-        isLoginRequired: false
-      },
-    ],
-  },
-  {
-    key: 'router-code',
-    title: 'Code Editor',
-    description: 'Code Editor',
-    path: '/code-editor',
-    isEnabled: true,
-    icon: CodeIcon,
-    appendDivider: true,
-    isLoginRequired: false
-  },
-  {
     key: 'router-livemap',
     title: 'Live Map',
     description: 'Live Map',
@@ -139,7 +92,7 @@ const routes: Array<Route> = [
     path: '/account',
     isEnabled: true,
     icon: UserIcon,
-    isLoginRequired: false,
+    isLoginRequired: true,
     subRoutes: [
       {
         key: 'router-settings',

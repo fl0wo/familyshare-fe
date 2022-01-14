@@ -114,4 +114,4 @@ let identity=(res: any)=>{
   return res
 };
 
-export {register,login, getMyKids, me, myEvent,registerKid }
+export {register,login, getMyKids, me, myEvent,registerKid, myEventAdd }

@@ -39,10 +39,9 @@ const ActivityHistory = (props:any) => {
     })
   }
 
-  //TODO: fix date
   function date_format(date:string){
     let d = new Date(date);
-    return d.getMonth()+"/"+d.getDay()+ " " + d.getHours() + ":"+d.getMinutes();
+    return d.getDate() + "/" + (d.getMonth() + 1)+ " " + d.getHours() + ":"+d.getMinutes();
   }
 
   return (

@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet';
 import { APP_TITLE, PAGE_TITLE_HOME } from '../utils/constants';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { myEvent } from '../containers/api';
+import { me, myEvent, registerKid, myEventAdd } from '../containers/api';
 import { setFirstTimeOnly, setLivePaths, setSelectedPaths, startAction } from '../utils/actions';
 import SelectedMap from './SelectedMap';
 
@@ -12,7 +12,16 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import ImageIcon from '@mui/icons-material/Image';
-import { ListItemButton } from '@mui/material';
+import { ListItemButton, TextField } from '@mui/material';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+
+import { updateUser } from '../utils/actions';
+
 
 const ActivityCurrent = (props:any) => {
 
@@ -43,6 +52,34 @@ const ActivityCurrent = (props:any) => {
     return d.getMonth()+"/"+d.getDay()+ " " + d.getHours() + ":"+d.getMinutes();
   }
 
+
+  let [eventDuration,setEventDuration]= useState('30')
+  let [eventTitle,setEventTitle]= useState('titolo evento')
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    // UPDATE USER
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const addNewEvent = ()=>{
+    if(eventDuration.length>0 && eventTitle.length>0)
+      myEventAdd(eventTitle, eventDuration)
+        .then(res=>{
+          me().then(response=>{
+            props.updateUser(response.data);
+            handleClickOpen();
+          });
+        })
+        .catch(err=>{
+          alert("Error");
+        })
+  }
+
   return (
     <>
       <Helmet>
@@ -56,9 +93,45 @@ const ActivityCurrent = (props:any) => {
 
       <div key={'add-event'}>
 
-
-
       </div>
+
+      <TextField id="outlined-basic"
+                 label="title"
+                 value={eventTitle}
+                 onChange={e=>setEventTitle(e.target.value)}
+                 variant="outlined" />
+
+      <TextField id="outlined-basic"
+                 label="duration"
+                 value={eventDuration}
+                 onChange={e=>setEventDuration(e.target.value)}
+                 variant="outlined" />
+
+      <Button
+        onClick={()=>addNewEvent()}
+        variant="outlined">New Event</Button>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Aggiunta nuovo evento"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Nuovo evento iniziato!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
+          <Button onClick={handleClose} autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
 
     </>
   );
@@ -71,7 +144,10 @@ const mapStateToProps = (state:any) => ({
 const mapDispatchToProps = (dispatch:any) => ({
   setSelectedPaths : (paths:any)=>{
     dispatch(setSelectedPaths(paths))
-  }
+  },
+  updateUser: (user:any) => {
+    dispatch(updateUser(user))
+  },
 });
 
 

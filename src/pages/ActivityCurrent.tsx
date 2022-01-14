@@ -12,7 +12,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import ImageIcon from '@mui/icons-material/Image';
-import { ListItemButton, TextField } from '@mui/material';
+import { ListItemButton, Slider, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -52,10 +52,11 @@ const ActivityCurrent = (props:any) => {
     return d.getMonth()+"/"+d.getDay()+ " " + d.getHours() + ":"+d.getMinutes();
   }
 
-
-  let [eventDuration,setEventDuration]= useState('30')
+  let [eventDuration,setEventDuration]= useState(30)
   let [eventTitle,setEventTitle]= useState('titolo evento')
   const [open, setOpen] = useState(false);
+
+  const sliderLabel = 'Duration';
 
   const handleClickOpen = () => {
     // UPDATE USER
@@ -67,8 +68,8 @@ const ActivityCurrent = (props:any) => {
   };
 
   const addNewEvent = ()=>{
-    if(eventDuration.length>0 && eventTitle.length>0)
-      myEventAdd(eventTitle, eventDuration)
+    if(eventDuration>0 && eventTitle.length>0)
+      myEventAdd(eventTitle, eventDuration + '')
         .then(res=>{
           me().then(response=>{
             props.updateUser(response.data);
@@ -79,6 +80,10 @@ const ActivityCurrent = (props:any) => {
           alert("Error");
         })
   }
+
+  const handleChange = (e: Event, newValue: number | number[]) => {
+    setEventDuration(newValue as number);
+  };
 
   return (
     <>
@@ -101,11 +106,18 @@ const ActivityCurrent = (props:any) => {
                  onChange={e=>setEventTitle(e.target.value)}
                  variant="outlined" />
 
-      <TextField id="outlined-basic"
-                 label="duration"
-                 value={eventDuration}
-                 onChange={e=>setEventDuration(e.target.value)}
-                 variant="outlined" />
+      <div>
+        <p>Duration</p>
+        <Slider
+          defaultValue={30}
+          min={5}
+          max={120}
+          getAriaLabel={() => 'Duration'}
+          aria-valuetext={sliderLabel}
+          value={eventDuration}
+          onChange={handleChange}
+          valueLabelDisplay="auto" />
+      </div>
 
       <Button
         onClick={()=>addNewEvent()}

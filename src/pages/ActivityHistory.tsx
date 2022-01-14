@@ -16,8 +16,6 @@ import { ListItemButton } from '@mui/material';
 
 const ActivityHistory = (props:any) => {
 
-
-
   function onEventSelect(eventId:string){
 
     function pathToMap(event:any) {

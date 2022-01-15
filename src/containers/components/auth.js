@@ -1,4 +1,9 @@
-import React from "react";
+import React, { useState } from 'react';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import InputAdornment from '@mui/material/InputAdornment';
+import { AccountCircle, Password } from '@mui/icons-material';
+import Box from '@mui/material/Box';
 
 const formStyle = {
     margin: 'auto',
@@ -9,6 +14,17 @@ const formStyle = {
     width: '220px',
     display: 'block'
 };
+
+const underLineBtn={
+    textDecoration: 'underline',
+    backgroundColor: 'Transparent',
+    backgroundRepeat:'no-repeat',
+    border: 'none',
+    cursor:'pointer',
+    overflow: 'hidden',
+    outline: 'none',
+}
+
 const labelStyle = {
     margin: '10px 0 5px 0',
     fontFamily: 'Arial, Helvetica, sans-serif',
@@ -42,24 +58,43 @@ const Field = React.forwardRef(({label, type, inputPlace}, ref) => {
     );
 });
 function LoginForm({onSubmit}){
-    const emailRef = React.useRef();
-    const passwordRef = React.useRef();
+
+    let [email,setEmail]= useState('test@gmail.com')
+    let [pwd,setPwd]= useState('test1234')
     const handleSubmit = e => {
         e.preventDefault();
         const data = {
-            email: emailRef.current.value,
-            password: passwordRef.current.value
+            email: email,
+            password: pwd
         };
         onSubmit(data);
     };
+
+
     return (
-        <form style={formStyle} onSubmit={handleSubmit}>
-            <Field ref={emailRef} inputPlace="robimeyo@gmail.com" label="Email:" type="email"/>
-            <Field ref={passwordRef} label="Password:" type="password"/>
+        <div>
+            <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                <TextField variant="standard"
+                           value={email}
+                           onChange={e=>setEmail(e.target.value)}
+                           inputPlace="test@gmail.com"
+                           label="Email:"
+                           type="email"/>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                <Password sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                <TextField variant="standard"
+                           value={pwd}
+                           onChange={e=>setPwd(e.target.value)}
+                           label="Password:" type="password"/>
+            </Box>
             <div>
-                <button style={submitStyle} type="submit">Submit</button>
+                <Button
+                  onClick={handleSubmit}
+                  variant="outlined">Login</Button>
             </div>
-        </form>
+        </div>
     );
 };
 function RegisterForm({onSubmit}){

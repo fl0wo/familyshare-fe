@@ -6,6 +6,7 @@ import { HasJwt } from '../components/profile';
 import { LoginForm, RegisterForm } from '../components/auth';
 import { setFirstTimeOnly, setLivePaths, startAction } from '../../utils/actions';
 import { connect } from 'react-redux';
+import Button from '@mui/material/Button';
 
 const appStyle = {
     height: '250px',
@@ -33,6 +34,17 @@ const Logon = (props)=> {
     let [base,setBase] = useState({...props});
     const previousFooRef = useRef(props.jwt);
     let [logon,setHasLogon] = useState(false);
+    let [isLoginShowed,setShowLogin]= useState(true)
+
+    const underLineBtn={
+        textDecoration: 'underline',
+        backgroundColor: 'Transparent',
+        backgroundRepeat:'no-repeat',
+        border: 'none',
+        cursor:'pointer',
+        overflow: 'hidden',
+        outline: 'none',
+    }
 
     function updateState() {
         base.number++;
@@ -71,13 +83,28 @@ const Logon = (props)=> {
         Popup.alert('add kiddo');
     }
 
+    function showRegister() {
+        setShowLogin(!isLoginShowed);
+    }
+
     return (
         <div style={appStyle}>
             {
                 (base.jwt == null)  &&
                 <div>
-                    <RegisterForm onSubmit={handleRegister}/>
-                    <LoginForm onSubmit={handleLogin}/>
+                    {
+                        (isLoginShowed===false) &&
+                        <RegisterForm onSubmit={handleRegister}/>
+                    }
+                    {
+                        (isLoginShowed===true) &&
+                        <LoginForm onSubmit={handleLogin}/>
+                    }
+                    <div>
+                        <Button
+                          onClick={showRegister}
+                          style={underLineBtn}>You don&apos;t have an account yet? Press here to register</Button>
+                    </div>
                 </div>
             }
             {

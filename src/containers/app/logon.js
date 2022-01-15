@@ -87,6 +87,9 @@ const Logon = (props)=> {
         setShowLogin(!isLoginShowed);
     }
 
+    const youDonTHaveAnAccountYetRegisterHere = 'You don\'t have an account yet? Register here! 😅';
+    const alreadyHaveAnAccountLoginHere = 'Already have an account? Login here! 😍';
+
     return (
         <div style={appStyle}>
             {
@@ -103,7 +106,15 @@ const Logon = (props)=> {
                     <div>
                         <Button
                           onClick={showRegister}
-                          style={underLineBtn}>You don&apos;t have an account yet? Press here to register</Button>
+                          style={underLineBtn}>
+                            {
+                                isLoginShowed ?
+                                  youDonTHaveAnAccountYetRegisterHere
+                                  :
+                                  alreadyHaveAnAccountLoginHere
+                            }
+
+                        </Button>
                     </div>
                 </div>
             }

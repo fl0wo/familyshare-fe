@@ -79,7 +79,7 @@ function LoginForm({onSubmit}){
                            value={email}
                            onChange={e=>setEmail(e.target.value)}
                            inputPlace="test@gmail.com"
-                           label="Email:"
+                           label="Email"
                            type="email"/>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -87,7 +87,7 @@ function LoginForm({onSubmit}){
                 <TextField variant="standard"
                            value={pwd}
                            onChange={e=>setPwd(e.target.value)}
-                           label="Password:" type="password"/>
+                           label="Password" type="password"/>
             </Box>
             <div>
                 <Button
@@ -98,27 +98,56 @@ function LoginForm({onSubmit}){
     );
 };
 function RegisterForm({onSubmit}){
-    const nameRef = React.useRef();
-    const emailRef = React.useRef();
-    const passwordRef = React.useRef();
+
+    let [name,setName]= useState('')
+    let [email,setEmail]= useState('')
+    let [pwd,setPwd]= useState('')
+
     const handleSubmit = e => {
         e.preventDefault();
         const data = {
-            name: nameRef.current.value,
-            email: emailRef.current.value,
-            password: passwordRef.current.value
+            name: name,
+            email: email,
+            password: pwd
         };
         onSubmit(data);
     };
     return (
-        <form style={formStyle} onSubmit={handleSubmit}>
-            <Field ref={nameRef} label="Name:" type="text"/>
-            <Field ref={emailRef} label="Email:" type="email"/>
-            <Field ref={passwordRef} label="Password:" type="password"/>
-            <div>
-                <button style={submitStyle} type="submit">Submit</button>
-            </div>
-        </form>
+
+      <div>
+
+          <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+              <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+              <TextField variant="standard"
+                         value={name}
+                         onChange={e=>setName(e.target.value)}
+                         inputPlace="Test"
+                         label="Username"
+                         type="text"/>
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+              <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+              <TextField variant="standard"
+                         value={email}
+                         onChange={e=>setEmail(e.target.value)}
+                         inputPlace="test@gmail.com"
+                         label="Email"
+                         type="email"/>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+              <Password sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+              <TextField variant="standard"
+                         value={pwd}
+                         onChange={e=>setPwd(e.target.value)}
+                         label="Password" type="password"/>
+          </Box>
+          <div>
+              <Button
+                onClick={handleSubmit}
+                variant="outlined">Register</Button>
+          </div>
+      </div>
     );
 };
 

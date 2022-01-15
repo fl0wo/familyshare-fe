@@ -13,6 +13,8 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import ImageIcon from '@mui/icons-material/Image';
 import { ListItemButton } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 const ActivityHistory = (props:any) => {
 
@@ -51,6 +53,19 @@ const ActivityHistory = (props:any) => {
       </Helmet>
 
       <div key={'events'}>
+
+        {props.user.events.length==0 &&
+          <div>
+            <Alert severity="info">
+              <AlertTitle>{'Oh no 😢'}</AlertTitle>
+              {'Never made an event with your kids?'} — <strong>
+              {
+                'Start a new event now inside the Current Activity tab! 🤩'
+              }
+            </strong>
+            </Alert>
+          </div>
+        }
 
         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
           {

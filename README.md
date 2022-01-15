@@ -16,3 +16,8 @@ TODO :
     - Implementare gen qrcode.
     - Implementare scan qrcode.
     - Finire documentazione.
+
+
+Run : 
+
+docker build -t familyshare-fe . && docker run -t -i -p 5002:80 --rm familyshare-fe 

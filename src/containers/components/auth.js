@@ -75,7 +75,9 @@ function LoginForm({onSubmit}){
         <div>
             <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                 <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                <TextField variant="standard"
+                <TextField
+                  required={true}
+                  variant="standard"
                            value={email}
                            onChange={e=>setEmail(e.target.value)}
                            inputPlace="test@gmail.com"
@@ -84,7 +86,9 @@ function LoginForm({onSubmit}){
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                 <Password sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                <TextField variant="standard"
+                <TextField
+                  required={true}
+                  variant="standard"
                            value={pwd}
                            onChange={e=>setPwd(e.target.value)}
                            label="Password" type="password"/>
@@ -118,7 +122,9 @@ function RegisterForm({onSubmit}){
 
           <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-              <TextField variant="standard"
+              <TextField
+                required={true}
+                variant="standard"
                          value={name}
                          onChange={e=>setName(e.target.value)}
                          inputPlace="Test"
@@ -128,7 +134,9 @@ function RegisterForm({onSubmit}){
 
           <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-              <TextField variant="standard"
+              <TextField
+                required={true}
+                variant="standard"
                          value={email}
                          onChange={e=>setEmail(e.target.value)}
                          inputPlace="test@gmail.com"
@@ -137,7 +145,9 @@ function RegisterForm({onSubmit}){
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Password sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-              <TextField variant="standard"
+              <TextField
+                required={true}
+                variant="standard"
                          value={pwd}
                          onChange={e=>setPwd(e.target.value)}
                          label="Password" type="password"/>

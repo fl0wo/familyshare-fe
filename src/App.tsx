@@ -37,7 +37,7 @@ function App(props: any) {
       return getMyKids().then(kids => {
         if (kids == null) return [];
         if (kids.data.length <= 0) return kids.data;
-        return kids.data.map(kid =>
+        return kids.data.map((kid: { positions: any[]; color: any; }) =>
           kid.positions.map(pos => {
               return {
                 lat: pos.coords.lat,

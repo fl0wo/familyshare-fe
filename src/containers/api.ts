@@ -8,16 +8,16 @@ const BASEURL = "http://vps-487579d2.vps.ovh.net:5001";
 
 const login = async (email: string, pwd: string) => {
 
-    const params = new URLSearchParams();
-    params.append('email', email);
-    params.append('password', pwd);
+  const params = new URLSearchParams();
+  params.append('email', email);
+  params.append('password', pwd);
 
-    return axios
-      .post<LoginResponse>(BASEURL + "/login", params)
-      .then((res)=>{
-          jwt=res.data.token;
-          return res.data.token;
-      })
+  return axios
+    .post<LoginResponse>(BASEURL + "/login", params)
+    .then((res) => {
+      jwt = res.data.token;
+      return res.data.token;
+    });
 }
 
 const register = async (name: string, email: string, pwd: string) => {
@@ -31,9 +31,7 @@ const register = async (name: string, email: string, pwd: string) => {
         .then((res: { data: { token: String; }; })=>{
             jwt = res.data.token;
             return jwt;
-        })
-        .catch(handleError);
-
+        });
 }
 
 const registerKid = async (name: string,
@@ -99,8 +97,8 @@ const myEventAdd = async (eventName: string, eventDurationMinutes:string) => {
 }
 
 function handleError(err: any) {
-    alert(JSON.stringify(err));
-    return null;
+    //alert(JSON.stringify(err.response.data));
+    return err.response.data;
 }
 
 function header(jwt: String) {

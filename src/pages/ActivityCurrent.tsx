@@ -176,8 +176,12 @@ const ActivityCurrent = (props:any) => {
           <div>
             <Button disabled variant="outlined">New Event</Button>
             <Alert severity="warning">
-              <AlertTitle>Error</AlertTitle>
-              This is an error alert — <strong>check it out!</strong>
+              <AlertTitle>Attention</AlertTitle>
+              Before adding a new event — <strong>
+              {
+                'wait for the current one to finish!😎'
+              }
+            </strong>
             </Alert>
           </div>
         }

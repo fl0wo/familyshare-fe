@@ -7,6 +7,13 @@ import { LoginForm, RegisterForm } from '../components/auth';
 import { setFirstTimeOnly, setLivePaths, startAction } from '../../utils/actions';
 import { connect } from 'react-redux';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+import { TransitionProps } from '@mui/material/transitions';
+import Slide from '@mui/material/Slide';
 
 const appStyle = {
     height: '250px',
@@ -27,6 +34,14 @@ const mapDispatchToProps = dispatch => ({
     setFirstTimeOnly : (wantAgain)=>{
         dispatch(setFirstTimeOnly(wantAgain))
     }
+});
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+      children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+    return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const Logon = (props)=> {
@@ -67,12 +82,20 @@ const Logon = (props)=> {
 
     let handleLogin = data => {
         login(data.email, data.password)
-            .then((jwt)=>init(jwt));
+            .then((jwt)=>{
+                init(jwt)
+            })
+          .catch((err)=>{
+              handleClickOpen(err.response.data);
+          })
     };
 
     let handleRegister = data => {
         register(data.name, data.email, data.password)
-            .then((jwt)=>init(jwt));
+            .then((jwt)=>init(jwt))
+          .catch((err)=>{
+              handleClickOpen(err.response.data);
+          })
     };
 
     function onKidSelect(i){
@@ -86,6 +109,19 @@ const Logon = (props)=> {
     function showRegister() {
         setShowLogin(!isLoginShowed);
     }
+
+    const [open, setOpen] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
+
+    const handleClickOpen = (err) => {
+        // UPDATE USER
+        setErrorMsg(JSON.stringify(err.errors));
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const youDonTHaveAnAccountYetRegisterHere = 'You don\'t have an account yet? Register here! 😅';
     const alreadyHaveAnAccountLoginHere = 'Already have an account? Login here! 😍';
@@ -128,6 +164,30 @@ const Logon = (props)=> {
                     />
                 </div>
             }
+
+            <Dialog
+              key={'logon-dialog'}
+              TransitionComponent={Transition}
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Login failed"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        { errorMsg }
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
+                    <Button onClick={handleClose} autoFocus>
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }

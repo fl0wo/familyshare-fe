@@ -26,18 +26,9 @@ export const HasJwt = ({
                         >----</span>
                         <span >{kid.name}</span>
                       </div>
-
-             /*         <div
-                        key={kid+i}
-                        onClick={() => onKidSelect(i)}>
-
-                      </div>*/
                   ))
                 }
-                <button onClick={onKidAdd}>+</button>
             </ul>
-            <h2>{new Date().getTime()}</h2>
-
         </div>
     );
 }
